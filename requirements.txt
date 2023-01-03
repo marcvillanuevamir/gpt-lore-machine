@@ -1,0 +1,6 @@
+openai
+eel
+sentencepiece
+torch
+transformers
+sacremoses

@@ -1,0 +1,15 @@
+{
+    "blocks":[
+        {"type":"p","text":"¿Cóm serà el títol de la próxima exposició del Santa Mònica?"},
+        {"type":"input","label":"Passat","id":"passat"},
+        {"type":"input","label":"Futur","id":"futur"}
+      ],
+      "process":[
+        {"text":"How would a title of a contemporary art museum would be called based on these predictions made by a fortune teller\n "},
+        {"text":"Future: "},
+        {"input":"passat","translate":"ca_en","after":"\n"},
+        {"text":"Past: "},
+        {"input":"futur","translate":"ca_en","after":"\n"},
+        {"text":"The title of the exhibition:\n"}
+        ]
+  }
