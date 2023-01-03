@@ -1,6 +1,6 @@
 {  
   "blocks":[
-        {"type":"p","text":"¿Cóm serà el títol de la próxima exposició del Santa Mònica?"},
+        {"type":"p","text":"Artistes"},
         {"type":"input","label":"Passat","id":"passat"},
         {"type":"input","label":"Futur","id":"futur"}
       ],

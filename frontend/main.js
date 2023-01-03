@@ -2,16 +2,26 @@ $( document ).ready(function() {
 
     load_template();
 
-    $("#main").on("click",".submit",function(e){
+    $("#main ").on("click",".textinputs .submit",function(e){
         e.preventDefault();
         let data={};
       
-         $("form:visible input[name]").each(function(e){
+         $(".textinputs:visible input[name]").each(function(e){
             data[$(this).attr("name")]=$(this).val();
            
          });  
+         $("#loader").show();
          console.log(data);
          send_template(data);
+    });
+
+    $("#main ").on("click",".predoptions .submit",function(e){
+        e.preventDefault();
+        let data={"prediction":$(".predoptions input[type='radio'][name='predresponse']:checked").val()};
+        
+        console.log(data);
+        eel.save_page(data);
+        load_template();
     });
 
 });
@@ -22,7 +32,7 @@ async function load_template() {
         if (t) {
             build_view(t);          
         } else {
-            alert("error");
+           // alert("error");
         }
     }
 
@@ -37,7 +47,7 @@ async function send_template(data){
 
 function build_view(o){
     let H='';
-    H+='<form>';
+    H+='<form class="textinputs">';
     o.blocks.forEach(function(b) {
       
             console.log(b);
@@ -54,20 +64,40 @@ function build_view(o){
     });
     
     H+='<div class="process">'
-
+    H+='<div class="">'
     H+='<label># Resultats</label>'
     H+='<input id="res" name="res" type="number" max="10" step="1" value="1" >';
-    H+='<input type="submit" class="submit" >';
+    H+='</div>'
+    H+='<input type="submit" class="btn submit" value="Fer prediccions" >';
     H+='</div>'
     H+='</form>';
 
-    H+='<div class="responses"></div>'
+    H+='<div class="responses" style="display:none">';
+    H+='<h2>Opcions</h2>'
+    H+='<form class="predoptions">';
+    H+='<div class="list">';
+    H+='</div>';
+    H+='<input type="submit" class="submit btn" value="Continuar">';
+    H+='</form>';
+    H+='</div>';
     console.log(H);
     $("#main").html(H);
 }
 
+eel.expose(end);
+function end(){
+    let H='<div class="end">Fi</div>';
+    $("#main").html(H);
+}
+
+eel.expose(res_finished);
+function res_finished(options){
+    $("#loader").hide();
+}
 
 eel.expose(getRes);
 function getRes(res) {
-  $(".responses").append('<div class="res">'+res+'</div>');
+   let new_res='<div class="res"><input type="radio" name="predresponse" value="'+res+'"><label>'+res+'</label></div>';
+  $(".responses .list").append(new_res);
+  $(".responses").show();
 }

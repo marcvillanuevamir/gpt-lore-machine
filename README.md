@@ -1,9 +1,9 @@
 # gpt-lore-machine
 
-uses Open AI gpt3 to create stories based on templates
+uses Open AI gpt3 API to create stories based on templates
 
 # Requirements
-conda env with python 3.7
+Environment with python 3.7 (conda recomended)
 
 # Install
 run 
@@ -18,3 +18,8 @@ The "process" section defines the structure to build the final prompt
 Create the templates in alfabetical order to control when they show up
 
 Content generated will be dumped inside /output folder
+
+run 
+```
+python main.py
+```
