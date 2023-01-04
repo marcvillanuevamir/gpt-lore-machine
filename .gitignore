@@ -4,6 +4,7 @@ output/*.mp4
 tmp/*.wav
 MakeItTalk
 examples/*.wav
+*.mp4
 *.wav
 src 
 examples

@@ -28,8 +28,8 @@ from scipy.signal import savgol_filter
 
 from src.approaches.train_audio2landmark import Audio2landmark_model
 
-image="/home/fedora/code/gpt-lore-machine/MakeItTalk/examples/tobey.png"
-audio="/home/fedora/Downloads/vertedero.wav"
+#image="/home/fedora/code/gpt-lore-machine/MakeItTalk/examples/tobey.png"
+#audio="/home/fedora/Downloads/vertedero.wav"
 #audio="/home/fedora/code/gpt-lore-machine/MakeItTalk/M6_04_16k.wav"
 
 
@@ -38,6 +38,10 @@ ADD_NAIVE_EYE = True
 CLOSE_INPUT_FACE_MOUTH = False
 
 parser = argparse.ArgumentParser()
+
+parser.add_argument('--image', type=str)
+parser.add_argument('--audio', type=str)
+
 parser.add_argument('--jpg', type=str, default='{}.jpg'.format(default_head_name))
 parser.add_argument('--close_input_face_mouth', default=CLOSE_INPUT_FACE_MOUTH, action='store_true')
 
@@ -73,8 +77,12 @@ parser.add_argument('--use_11spk_only', default=False, action='store_true')
 
 opt_parser = parser.parse_args()
 
+image=opt_parser.image
+audio=opt_parser.audio
+print("image",image)
 ''' STEP 1: preprocess input single image '''
 img =cv2.imread(image)
+
 predictor = face_alignment.FaceAlignment(face_alignment.LandmarksType._3D, device='cuda', flip_input=True)
 shapes = predictor.get_landmarks(img)
 if (not shapes or len(shapes) != 1):
