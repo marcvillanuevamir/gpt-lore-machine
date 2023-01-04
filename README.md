@@ -3,7 +3,12 @@
 uses Open AI gpt3 API to create stories based on templates
 
 # Requirements
-Environment with python 3.7 (conda recomended)
+Environment with python 3.6 (conda recomended)
+ffmpeg
+clone https://github.com/carlitoselmago/MakeItTalk inside "gpt-lore-machine" folder and download models from instructions
+create a symlink src pointing to MakeitTalk/src
+create a symlink examples pointing to MakeitTalk/examples
+
 
 # Install
 run 

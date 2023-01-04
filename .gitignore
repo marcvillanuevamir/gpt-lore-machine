@@ -1,5 +1,13 @@
 config.ini
-output/*
+output/*.json
+output/*.mp4
+tmp/*.wav
+MakeItTalk
+examples/*.wav
+*.wav
+src 
+examples
+tmp/*.mp4
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
