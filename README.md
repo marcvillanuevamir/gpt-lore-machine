@@ -36,5 +36,9 @@ python main.py
 # Avatar
 run
 ```
-python create-video.py --audio audio.wav --image image.png
+python create-video.py --audio audio.wav --image image.png --bg background.jpg
 ```
+
+exemple:
+python create-video.py --audio C:\Users\gamer\Downloads\mario.wav  --image C:\Users\gamer\Desktop\TMP\tobey.png --bg C:\Users\gamer\Desktop\TMP\bg.jpg
+image C:\Users\gamer\Desktop\TMP\tobey.png

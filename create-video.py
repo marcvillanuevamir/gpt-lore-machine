@@ -41,6 +41,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument('--image', type=str)
 parser.add_argument('--audio', type=str)
+parser.add_argument('--bg', type=str)
 
 parser.add_argument('--jpg', type=str, default='{}.jpg'.format(default_head_name))
 parser.add_argument('--close_input_face_mouth', default=CLOSE_INPUT_FACE_MOUTH, action='store_true')
@@ -79,6 +80,7 @@ opt_parser = parser.parse_args()
 
 image=opt_parser.image
 audio=opt_parser.audio
+bg=opt_parser.bg
 print("image",image)
 ''' STEP 1: preprocess input single image '''
 img =cv2.imread(image)
@@ -195,7 +197,7 @@ for i in range(0,len(fls)):
     model = Image_translation_block(opt_parser, single_test=True)
     
     with torch.no_grad():
-        model.single_test(jpg=img, fls=fl, filename=fls[i],audiofile=audio, prefix=os.path.basename(image).split('.')[0])
+        model.single_test(jpg=img, fls=fl, filename=fls[i],audiofile=audio, prefix=os.path.basename(image).split('.')[0],background=bg)
         print('finish image2image gen')
     os.remove(os.path.join('examples', fls[i]))
    
