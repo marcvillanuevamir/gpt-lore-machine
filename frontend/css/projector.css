@@ -1,0 +1,14 @@
+body{
+    margin:0px;
+    overflow: hidden;
+    background-color: black;
+}
+#texttype{
+    position: fixed;
+    z-index: 1;
+    color: white;
+    height: 100%;
+    padding: 20px;
+    font-size: 38px;
+    font-family: 'Source Code Pro', monospace;
+}

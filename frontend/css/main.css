@@ -68,7 +68,7 @@ a{
 p{
     font-size: 18px;
 }
-input,textarea{
+input,textarea,select{
     background-color: #ECECEC;
     border: none;
     font-size: 28px;
@@ -82,6 +82,9 @@ textarea{
 label{
     display: block;
     margin-bottom: 5px;
+}
+textarea.bigtextarea{
+   height: calc(100vh - 280px);
 }
 
 .btn{
@@ -155,4 +158,18 @@ label{
     position: absolute;
     width: 100%;
     font-size: 200px;
+}
+.blocks{
+    display: flex;
+}
+.leftblock{
+    flex: 1;
+}
+#options{
+    width: 270px;
+    padding-left: 34px;
+}
+#options select{
+    width: 100%;
+    font-size: 16px;
 }

@@ -4,3 +4,5 @@ sentencepiece
 torch
 transformers
 sacremoses
+pygame
+sentencepiece

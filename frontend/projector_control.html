@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='css/main.css' rel='stylesheet' type='text/css'>
+    <title>Projector control</title>
+  </head>
+  <body id="p_control">
+    <div id="main">
+      <form class="textcontrol">
+      <div class="blocks">
+        <div class="block leftblock">
+          <label>Text per a pantalla</label>
+          <textarea class="bigtextarea" id="text" name="en"></textarea>
+        </div>
+      
+        
+        <div id="options">
+            <label>Escollir audio fons</label>
+            <select name="audio" id="audio">
+                
+            </select>
+            <br><br>
+            <label>Veu</label>
+            <select name="voice" id="voice">
+                
+            </select>
+        </div>
+    </div>
+        <div class="process">
+         
+            <input type="submit" class="btn submit" value="Enviar">
+          </div>
+   
+      </form>
+     
+    </div>
+    <script type="text/javascript" src="/eel.js"></script>
+    <script src="jquery-3.6.1.min.js" a></script>
+    <script src="js/projector_control.js"></script>
+  </body>
+</html>
