@@ -29,7 +29,7 @@ def sendtoprojector(data):
     audiofile="frontend/audios/"+data["audio"]+".mp3"
     mixer.init()
     mixer.music.load(audiofile)
-    pygame.mixer.music.set_volume(0.5)
+    pygame.mixer.music.set_volume(0.3)
     mixer.music.play()
     #time.sleep(10)
    

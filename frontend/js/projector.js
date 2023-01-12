@@ -1,10 +1,26 @@
+window.last_text_H=0;
+
 function typeWriter() {
-    if (window.i < window.txt.length) {
-        document.getElementById("text").innerHTML += window.txt.charAt(window.i);
-        window.i++;
-        setTimeout(typeWriter, window.speed);
-    }
-    }
+  let screenH=$(window).height();
+  if (window.i < window.txt.length) {
+    document.getElementById("text").innerHTML=$("#text").text();
+      document.getElementById("text").innerHTML += '<span class="shine">'+window.txt.charAt(window.i)+'</span>';
+      let newtextH=$("#text").height();
+      if (newtextH>=screenH){
+      //if (newtextH>=screenH || window.txt.charAt(window.i)=="."){
+        document.getElementById("text").innerHTML="";
+      }
+      /*
+      if (newtextH>window.last_text_H){
+        let difference=newtextH-window.last_text_H;
+        $("#text").css("top",-difference);
+      }
+      */
+      window.i++;
+      window.last_text_H=newtextH;
+      setTimeout(typeWriter, window.speed);
+  }
+}
 
 eel.expose(endProjection);
 function endProjection(data){
@@ -252,10 +268,11 @@ loader.load(imgSrc, (texture) => {
     // Set texture to material
     material.map = texture;
 
+    let scaler=1.2;
     // Update plane
     let aspectRatio = texture.image.width / texture.image.height;
-    plane.scale.x = aspectRatio*2;
-    plane.scale.y = 1*2;
+    plane.scale.x = aspectRatio*scaler;
+    plane.scale.y = 1*scaler;
     console.log("loaded");
     // Add plane to the scene
     scene.add(plane);
@@ -273,7 +290,10 @@ function animate() {
   renderer.render(scene, camera);
   //requestAnimationFrame(animate);
 }
-$("#three").fadeIn(1000);
+setTimeout(function(){
+  $("#three").fadeIn(1000);
+}, 1000);
+
 animate();
 
 }
