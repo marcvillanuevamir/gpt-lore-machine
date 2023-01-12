@@ -10,12 +10,7 @@ function typeWriter() {
       //if (newtextH>=screenH || window.txt.charAt(window.i)=="."){
         document.getElementById("text").innerHTML="";
       }
-      /*
-      if (newtextH>window.last_text_H){
-        let difference=newtextH-window.last_text_H;
-        $("#text").css("top",-difference);
-      }
-      */
+     
       window.i++;
       window.last_text_H=newtextH;
       setTimeout(typeWriter, window.speed);
@@ -80,29 +75,18 @@ function speak(text,voicename) {
 
           //Couldn't split by normal characters, then we use spaces
           if (p == -1 || p >= CHARACTER_LIMIT) {
-
             var words = tmptxt.split(' ');
-
             for (var i = 0; i < words.length; i++) {
-
               if (part.length + words[i].length + 1 > CHARACTER_LIMIT)
                 break;
-
               part += (i != 0 ? ' ' : '') + words[i];
-
             }
-
           } else {
-
             part = tmptxt.substr(0, p + 1);
-
           }
 
           tmptxt = tmptxt.substr(part.length, tmptxt.length - part.length);
-
           window.multipartText.push(part);
-          //console.log(part.length + " - " + part);
-
         }
 
         //Add the remaining text
@@ -111,7 +95,6 @@ function speak(text,voicename) {
         }
 
       } else {
-
         //Small text
         window.multipartText.push(text);
       }
@@ -119,14 +102,10 @@ function speak(text,voicename) {
 
       //Play multipart text
       for (var i = 0; i < window.multipartText.length; i++) {
-        
-        //Use SpeechSynthesis
-        //console.log(multipartText[i]);
 
         //Create msg object
         var msg = new SpeechSynthesisUtterance();
-        //msg.voice = profile.systemvoice;
-        //msg.voiceURI = profile.systemvoice.voiceURI;
+      
         msg.volume = 1; // 0 to 1
         msg.rate = 1; // 0.1 to 10
         // msg.rate = usersetting || 1; // 0.1 to 10
@@ -144,48 +123,13 @@ function speak(text,voicename) {
         msg.onstart = function (e) {
           var curenttxt = e.currentTarget.text;
           console.log(curenttxt);
-          //highlight(e.currentTarget.text);
-          //$('#showtxt').text(curenttxt);
-          //console.log(e);
+        
         };
         //console.log(msg);
         speechSynthesis.speak(msg);
-        /*
-        if (!window.playing){
-          multipartText=[];
-          speechSynthesis.cancel();
-          break;
-        }
-        */
+      
       }
-    /*
-    // Create a new instance of SpeechSynthesisUtterance.
-    //var msg = new SpeechSynthesisUtterance();
-    console.log(text);
-    // Set the text.
-    //  msg.text = text;
-    
-      var utterance = new SpeechSynthesisUtterance(text);
-    // Set the attributes.
-     // msg.volume = parseFloat(volumeInput.value);
-    //  msg.rate = parseFloat(rateInput.value);
-    //  msg.pitch = parseFloat(pitchInput.value);
-    
-    // If a voice has been selected, find the voice and set the
-    // utterance instance's voice attribute.
-    // console.log(voicename);
-    //msg.voice = speechSynthesis.getVoices().filter(function(voice) { return voice.name == voicename; })[0];
-    var voiceArr = speechSynthesis.getVoices();
-    utterance.voice = voiceArr[parseInt(voiceindex)];
-    // Queue this utterance.
-     // window.speechSynthesis.speak(msg);
-     speechUtteranceChunker(utterance, {
-        chunkLength: 120
-    }, function () {
-        //some code to execute when done
-        console.log('done');
-    });
-    */
+   
   }
 
 speak("Projector started","Microsoft George - English (United Kingdom)");
@@ -197,22 +141,7 @@ let imgSrc='cercle.jpg';//'cringe.jpg';
 
 // Create a scene
 let scene = new THREE.Scene();
-/*
-// create an AudioListener and add it to the camera
-const listener = new THREE.AudioListener();
-camera.add( listener );
 
-// create a global audio source
-const sound = new THREE.Audio( listener );
-
-// load a sound and set it as the Audio object's buffer
-const audioLoader = new THREE.AudioLoader();
-audioLoader.load( audiofile, function( buffer ) {
-	sound.setBuffer( buffer );
-	sound.setLoop( true );
-	sound.setVolume( 0.5 );
-	sound.play();
-});*/
 
 // Create a camera
 let camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
@@ -228,26 +157,8 @@ $("#three")[0].appendChild(renderer.domElement);
 let planeGeometry = new THREE.PlaneGeometry(1,1);
 //let planeMaterial = new THREE.MeshBasicMaterial({map:texture} );
 let basicmaterial= new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-/*
-let plane1 = new THREE.Mesh(planeGeometry, planeMaterial);
-let plane2 = new THREE.Mesh(planeGeometry, planeMaterial);
-let plane3 = new THREE.Mesh(planeGeometry, planeMaterial);
-*/
-
-// Position the planes
-//plane1.position.set(2.5, 0, 0);
-//plane2.position.set(-2.5, 0, 0);
-//plane3.position.set(0, 0, 2.5);
-
-// Add the planes to the scene
-//scene.add(plane1);
-//scene.add(plane2);
-//scene.add(plane3);
-//scene.add(mesh);
-
 
 camera.position.z = 5;
-
 
 // Create a plane geometry
 let geometry = new THREE.PlaneGeometry(10, 10);
@@ -257,8 +168,6 @@ let material = new THREE.MeshBasicMaterial();
 
 // Create a plane
 let plane = new THREE.Mesh(geometry, material);
-
-
 
 // Load an image
 let loader = new THREE.TextureLoader();

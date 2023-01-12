@@ -46,8 +46,6 @@ $( document ).ready(function() {
     window.speechSynthesis.onvoiceschanged = function(e) {
         loadVoices();
     };
-    
-  
 });
 
 eel.expose(recieveAudios);
