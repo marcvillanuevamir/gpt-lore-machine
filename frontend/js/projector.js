@@ -39,7 +39,6 @@ window.playing=false;
 eel.expose(showtext);
 function showtext(data){
     $("#main").show();
-    
     window.playing=true;
     console.log(data);
     startTheater();
