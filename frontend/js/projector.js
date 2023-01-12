@@ -6,9 +6,25 @@ function typeWriter() {
     }
     }
 
+eel.expose(endProjection);
+function endProjection(data){
+  window.playing=false;
+  window.multipartText = [];
+  speechSynthesis.cancel();
+  let speed=1000;
+  $("#three,#main").fadeOut(speed);
+  setTimeout(function(){
+    document.getElementById("text").innerHTML="";
+}, speed+300);
+};
+
+window.playing=false;
 
 eel.expose(showtext);
 function showtext(data){
+    $("#main").show();
+    
+    window.playing=true;
     console.log(data);
     startTheater();
     speak(data["en"],data["voice"]);
@@ -30,7 +46,7 @@ if ('speechSynthesis' in window) {
 function speak(text,voicename) {
     var CHARACTER_LIMIT = 200;
       //Support for multipart text (there is a limit on characters)
-      var multipartText = [];
+      window.multipartText = [];
 
       if (text.length > CHARACTER_LIMIT) {
 
@@ -69,26 +85,26 @@ function speak(text,voicename) {
 
           tmptxt = tmptxt.substr(part.length, tmptxt.length - part.length);
 
-          multipartText.push(part);
+          window.multipartText.push(part);
           //console.log(part.length + " - " + part);
 
         }
 
         //Add the remaining text
         if (tmptxt.length > 0) {
-          multipartText.push(tmptxt);
+          window.multipartText.push(tmptxt);
         }
 
       } else {
 
         //Small text
-        multipartText.push(text);
+        window.multipartText.push(text);
       }
 
 
       //Play multipart text
-      for (var i = 0; i < multipartText.length; i++) {
-
+      for (var i = 0; i < window.multipartText.length; i++) {
+        
         //Use SpeechSynthesis
         //console.log(multipartText[i]);
 
@@ -100,8 +116,8 @@ function speak(text,voicename) {
         msg.rate = 1; // 0.1 to 10
         // msg.rate = usersetting || 1; // 0.1 to 10
         msg.pitch = 1; //0 to 2*/
-        msg.text = multipartText[i];
-        msg.speak = multipartText;
+        msg.text = window.multipartText[i];
+        msg.speak = window.multipartText;
         //msg.lang = lang;
         msg.voice = speechSynthesis.getVoices().filter(function(voice) { return voice.name == voicename; })[0];
         msg.onend = self.OnFinishedPlaying;
@@ -119,7 +135,13 @@ function speak(text,voicename) {
         };
         //console.log(msg);
         speechSynthesis.speak(msg);
-
+        /*
+        if (!window.playing){
+          multipartText=[];
+          speechSynthesis.cancel();
+          break;
+        }
+        */
       }
     /*
     // Create a new instance of SpeechSynthesisUtterance.
@@ -184,7 +206,7 @@ let camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeigh
 let renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio( window.devicePixelRatio );
 renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+$("#three")[0].appendChild(renderer.domElement);
 
 
 // Set up the objects
@@ -236,7 +258,7 @@ loader.load(imgSrc, (texture) => {
     plane.scale.y = 1*2;
     console.log("loaded");
     // Add plane to the scene
-scene.add(plane);
+    scene.add(plane);
 });
 
 
@@ -251,8 +273,9 @@ function animate() {
   renderer.render(scene, camera);
   //requestAnimationFrame(animate);
 }
-
+$("#three").fadeIn(1000);
 animate();
+
 }
 
 

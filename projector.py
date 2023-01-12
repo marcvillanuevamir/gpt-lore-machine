@@ -15,6 +15,12 @@ def sendData(data):
     eel.showtext(data)
 
 @eel.expose
+def stopProjector():
+    print("STOP PROJECTOR")
+    eel.endProjection()
+    pygame.mixer.music.fadeout(3000)
+
+@eel.expose
 def sendtoprojector(data):
 
     cat=translate(data["en"])

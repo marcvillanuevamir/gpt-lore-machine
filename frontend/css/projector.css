@@ -12,3 +12,6 @@ body{
     font-size: 38px;
     font-family: 'Source Code Pro', monospace;
 }
+#three{
+    position: fixed;
+}

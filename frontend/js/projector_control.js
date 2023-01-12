@@ -2,6 +2,11 @@ $( document ).ready(function() {
 
     eel.getaudios();
 
+    $("#stop").on("click",function(e){
+        e.preventDefault();
+        eel.stopProjector();
+    });
+
     $(".textcontrol").on("click",".submit",function(e){
         e.preventDefault();
         let data={};

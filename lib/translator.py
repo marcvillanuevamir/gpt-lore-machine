@@ -6,18 +6,24 @@ if not sys.warnoptions:
 import torch
 from transformers import AutoTokenizer, AutoModelWithLMHead
 
-from gpt import GPT
+#from gpt import GPT
 
-#settings
+#hack to speed up
+origin="en"
+target="ca"
+model="Helsinki-NLP/opus-mt-"+origin+"-"+target #english -> destISO
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+tokenizer = AutoTokenizer.from_pretrained(model)
+model = AutoModelWithLMHead.from_pretrained(model).to(device)
 
 def translate(translate_string: str,origin="en",target="ca") -> str:
-    model="Helsinki-NLP/opus-mt-"+origin+"-"+target #english -> destISO
+    #model="Helsinki-NLP/opus-mt-"+origin+"-"+target #english -> destISO
     # Set the device to run on (CPU or GPU)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    #device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # Download the tokenizer and model for the translation model
-    tokenizer = AutoTokenizer.from_pretrained(model)
-    model = AutoModelWithLMHead.from_pretrained(model).to(device)
+    #tokenizer = AutoTokenizer.from_pretrained(model)
+    #model = AutoModelWithLMHead.from_pretrained(model).to(device)
    
     # Encode the string to translate and set it to the device
     input_ids = torch.tensor(tokenizer.encode(translate_string, return_tensors='pt')).to(device)
