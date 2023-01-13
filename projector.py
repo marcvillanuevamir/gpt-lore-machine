@@ -66,6 +66,7 @@ def sendtoprojector(data):
     #process text in blocks
     textBlocks=data["en"].splitlines( )
     x = threading.Thread(target=translateChain, args=(textBlocks,data["voice"],timest))
+    time.sleep(0.1)
     x.start()
 
     #cat=translate(data["en"])
