@@ -61,6 +61,7 @@ def sendtoprojector(data):
     mixer.init()
     mixer.music.load(audiofile)
     pygame.mixer.music.set_volume(0.3)
+<<<<<<< Updated upstream
     mixer.music.play()
     
     #process text in blocks
@@ -73,6 +74,11 @@ def sendtoprojector(data):
     #data["cat"]=cat
     #time.sleep(waittillspeak)
     #sendData(data)
+=======
+    mixer.music.play(loops=-1)
+    #time.sleep(10)
+   
+>>>>>>> Stashed changes
 
 #scan audios and send them to control
 audios=glob.glob("frontend/audios/*.mp3")
