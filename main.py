@@ -2,7 +2,7 @@ import eel
 import os
 import glob
 import json
-from gpt import GPT
+from lib.gpt import GPT
 GPT=GPT()
 
 templates=glob.glob("templates/*.json")

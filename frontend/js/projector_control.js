@@ -9,15 +9,19 @@ $( document ).ready(function() {
 
     $(".textcontrol").on("click",".submit",function(e){
         e.preventDefault();
-        let data={};
-      
-         $("form  input[name],form textarea[name],select[name]").each(function(e){
-            data[$(this).attr("name")]=$(this).val();
-           
-         });  
-         //$("#loader").show();
-         console.log(data);
-         eel.sendtoprojector(data);
+        eel.stopProjector();
+        setTimeout(function(){
+        
+            let data={};
+        
+            $("form  input[name],form textarea[name],select[name]").each(function(e){
+                data[$(this).attr("name")]=$(this).val();
+            
+            });  
+            //$("#loader").show();
+            console.log(data);
+            eel.sendtoprojector(data);
+        }, 900);
     });
 
     function loadVoices() {

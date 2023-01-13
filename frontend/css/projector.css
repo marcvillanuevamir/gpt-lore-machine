@@ -1,8 +1,10 @@
 body{
     margin:0px;
     overflow: hidden;
-    background-color: black;
+     background-color: #050C1F;
+   
 }
+
 #texttype{
     position: fixed;
     z-index: 1;
@@ -18,6 +20,7 @@ body{
 }
 #three{
     position: fixed;
+    background-color: #050C1F;
 }
 
 canvas{

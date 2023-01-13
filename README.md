@@ -32,6 +32,12 @@ run
 python main.py
 ```
 
+# Projector
+
+Shows translated text in a theater for a screen
+
+Make sure no chrome window is open before opening the projector
+
 
 # Avatar
 run

@@ -1,27 +1,83 @@
-window.last_text_H=0;
+function initVars(){
+  window.playing=false;
+  window.last_text_H=0;
+  window.texts=[];
+  window.txt="";
+  window.i = 0;
+  window.talks=[];
+  window.is_speaking=false;
+  window.is_typing=false;
+  window.voice="";
+  window.speed = 50;
+  document.getElementById("text").innerHTML ="";
+}
 
-function typeWriter() {
-  let screenH=$(window).height();
-  if (window.i < window.txt.length) {
-    document.getElementById("text").innerHTML=$("#text").text();
-      document.getElementById("text").innerHTML += '<span class="shine">'+window.txt.charAt(window.i)+'</span>';
-      let newtextH=$("#text").height();
-      if (newtextH>=screenH){
-      //if (newtextH>=screenH || window.txt.charAt(window.i)=="."){
-        document.getElementById("text").innerHTML="";
-      }
-     
-      window.i++;
-      window.last_text_H=newtextH;
-      setTimeout(typeWriter, window.speed);
+initVars();
+
+function handleEndBlock(){
+  //check if both speak and type are finished and process a new chunk of text
+  if (!window.is_speaking && !window.is_typing){
+    //launch next block
+    if (window.texts.length>0){
+
+      speak(window.talks.shift(),window.voice);
+      window.txt=window.texts.shift();
+      window.i = 0;
+      console.log("handleEndBlock",window.txt);
+      document.getElementById("text").innerHTML ="";
+      typeWriter();
+    } else {
+      //all blocks end
+      console.log("ALL BLOCKS END!");
+    }
   }
 }
 
+
+function typeWriter() {
+  window.is_typing=true;
+  let screenH=$(window).height();
+  if (window.i < window.txt.length) {
+    $("#text .shine").removeClass("shine");
+    //document.getElementById("text").innerHTML=$("#text").text();
+      let c=window.txt.charAt(window.i);
+      //if (c=="."){
+      //  c=".<br>"; 
+      //}
+      document.getElementById("text").innerHTML += '<span class="shine">'+c+'</span>';
+      let newtextH=$("#text").height()+100;
+      if (newtextH>=screenH){
+        //next page
+        let lastword=$("#text").text().split(" ").splice(-1,1);
+        document.getElementById("text").innerHTML=lastword;
+      }
+      window.i++;
+      window.last_text_H=newtextH;
+      setTimeout(typeWriter, window.speed);
+  } else {
+    console.log("no more text in window.txt");
+    //end
+    window.is_typing=false;
+    handleEndBlock();
+  }
+}
+
+eel.expose(preStartProjector);
+function preStartProjector(timest){
+  window.blocksid=timest;
+  document.getElementById("text").innerHTML ="";
+    $("#main").show();
+    window.playing=true;
+    startTheater();
+}
+
 eel.expose(endProjection);
-function endProjection(data){
+function endProjection(){
   window.playing=false;
   window.multipartText = [];
+  window.i=10000000000000000000000;
   speechSynthesis.cancel();
+  initVars();
   let speed=1000;
   $("#three,#main").fadeOut(speed);
   setTimeout(function(){
@@ -29,22 +85,42 @@ function endProjection(data){
 }, speed+300);
 };
 
-window.playing=false;
 
+
+eel.expose(addtext);
+function addtext(data,i,id){
+  console.log("ID CHECK",id,window.blocksid)
+  if (id==window.blocksid){
+    window.texts.push(data["cat"]);
+    window.talks.push(data["en"]);
+    //if (window.texts.length==1){
+    if (i==0){
+      //init writer and speak 
+      window.voice=data["voice"];
+      console.log("voice",window.voice);
+      window.talks.shift();
+      window.txt=window.texts.shift();
+      window.i = 0;
+      console.log("got first text",window.txt);
+      speak(data["en"],window.voice);
+      typeWriter();
+    } else {
+        handleEndBlock();
+    } 
+  }
+}
+
+/*
 eel.expose(showtext);
 function showtext(data){
-    $("#main").show();
-    window.playing=true;
-    console.log(data);
-    startTheater();
     speak(data["en"],data["voice"]);
     window.i = 0;
     window.txt = data["cat"];
-    window.speed = 50;
+    
     document.getElementById("text").innerHTML="";
     typeWriter();
 }
-
+*/
 
 if ('speechSynthesis' in window) {
     // Speech Synthesis supported 🎉
@@ -54,6 +130,7 @@ if ('speechSynthesis' in window) {
    }
 
 function speak(text,voicename) {
+  window.is_speaking=true;
     var CHARACTER_LIMIT = 200;
       //Support for multipart text (there is a limit on characters)
       window.multipartText = [];
@@ -99,7 +176,6 @@ function speak(text,voicename) {
         window.multipartText.push(text);
       }
 
-
       //Play multipart text
       for (var i = 0; i < window.multipartText.length; i++) {
 
@@ -114,7 +190,10 @@ function speak(text,voicename) {
         msg.speak = window.multipartText;
         //msg.lang = lang;
         msg.voice = speechSynthesis.getVoices().filter(function(voice) { return voice.name == voicename; })[0];
-        msg.onend = self.OnFinishedPlaying;
+        msg.onend = function (e) {//self.OnFinishedPlaying;
+          //console.log("end msg");
+          self.OnFinishedPlaying;
+        };
         msg.onerror = function (e) {
           console.log('Error');
           console.log(e);
@@ -122,17 +201,25 @@ function speak(text,voicename) {
         /*GC*/
         msg.onstart = function (e) {
           var curenttxt = e.currentTarget.text;
-          console.log(curenttxt);
+          //console.log(curenttxt);
         
         };
         //console.log(msg);
-        speechSynthesis.speak(msg);
+        if (window.playing){
+          speechSynthesis.speak(msg);
+        }
       
       }
+      msg.onend = function (e) {
+        console.log("end all speak msg");
+        self.OnFinishedPlaying;
+        window.is_speaking=false;
+        handleEndBlock();
+      };
    
   }
 
-speak("Projector started","Microsoft George - English (United Kingdom)");
+speak("Interface ready","Google US English");
 
 function startTheater(){
 /* Create a Tree.js script with planes rotating in space with the same image */
@@ -147,7 +234,7 @@ let scene = new THREE.Scene();
 let camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
 
 // Create a renderer
-let renderer = new THREE.WebGLRenderer({ antialias: true });
+let renderer = new THREE.WebGLRenderer({ antialias: true , alpha: true });
 renderer.setPixelRatio( window.devicePixelRatio );
 renderer.setSize(window.innerWidth, window.innerHeight);
 $("#three")[0].appendChild(renderer.domElement);
