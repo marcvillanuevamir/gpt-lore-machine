@@ -14,18 +14,29 @@ function initVars(){
 
 initVars();
 
-function handleEndBlock(){
+function reLaunchBlock(){
+  speak(window.talks.shift(),window.voice);
+  window.txt=window.texts.shift();
+  window.i = 0;
+  console.log("handleEndBlock",window.txt);
+  document.getElementById("text").innerHTML ="";
+  typeWriter();
+}
+
+function handleEndBlock(trigger){
   //check if both speak and type are finished and process a new chunk of text
   if (!window.is_speaking && !window.is_typing){
     //launch next block
     if (window.texts.length>0){
-
-      speak(window.talks.shift(),window.voice);
-      window.txt=window.texts.shift();
-      window.i = 0;
-      console.log("handleEndBlock",window.txt);
-      document.getElementById("text").innerHTML ="";
-      typeWriter();
+      if (trigger=="typing"){
+        console.log("stop launched by typing, wait some seconds:::::::::::::::::::::::::::");
+        setTimeout(function(){
+          reLaunchBlock();
+        }, 2000);
+      } else {
+        reLaunchBlock();
+      }
+     
     } else {
       //all blocks end
       console.log("ALL BLOCKS END!");
@@ -58,7 +69,7 @@ function typeWriter() {
     console.log("no more text in window.txt");
     //end
     window.is_typing=false;
-    handleEndBlock();
+    handleEndBlock("typing");
   }
 }
 
@@ -80,9 +91,11 @@ function endProjection(){
   initVars();
   let speed=1000;
   $("#three,#main").fadeOut(speed);
+  /*
   setTimeout(function(){
     document.getElementById("text").innerHTML="";
 }, speed+300);
+*/
 };
 
 
@@ -214,7 +227,7 @@ function speak(text,voicename) {
         console.log("end all speak msg");
         self.OnFinishedPlaying;
         window.is_speaking=false;
-        handleEndBlock();
+        handleEndBlock("speaking");
       };
    
   }

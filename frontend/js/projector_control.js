@@ -9,7 +9,7 @@ $( document ).ready(function() {
 
     $(".textcontrol").on("click",".submit",function(e){
         e.preventDefault();
-        eel.stopProjector();
+       // eel.stopProjector();
         setTimeout(function(){
         
             let data={};
