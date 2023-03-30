@@ -1,6 +1,10 @@
 import os
 import openai
+import io
+from pydub import AudioSegment
+import tempfile
 import configparser
+from lib.recorder import recorder
 config = configparser.ConfigParser()
 config.read('config.ini')
 openai.api_key = config["OPENAI"]["apikey"]
@@ -12,6 +16,9 @@ class GPT:
    
     def __init__(self):
         pass 
+
+    def init_recorder(self):
+        self.recorder=recorder()
 
     def complete(self,prompt="",temperature=0.8,max_tokens=7):
         r=openai.Completion.create(
@@ -74,3 +81,39 @@ class GPT:
             
             res.append(r)
         return res
+
+    def transcribe(self,audio_file):
+        #print("gonna transcribe")
+        model="whisper-1"
+        
+        """
+        # Create a temporary file to store the binary data
+        with tempfile.NamedTemporaryFile(suffix='.wav', mode='wb', delete=False) as temp_file:
+            temp_file.write(data)
+            temp_file.flush()
+        """
+        """
+        # Save the audio data to a file
+        audio_file_name = "audio.wav"
+        with open(audio_file_name, 'wb') as audio_file:
+            audio_file.write(data)
+
+        # Convert audio format to MP3
+        audio_file_mp3="audio.mp3"
+        audio = AudioSegment.from_wav(audio_file_name)
+        audio.export(audio_file_mp3, format="mp3")
+        """
+        # Transcribe audio using OpenAI Whisper ASR API
+        with open(audio_file, 'rb') as data_file:
+            response = openai.Audio.transcribe(model,data_file)
+            print("response",response["text"])
+            return response["text"]
+            if response.get("choices"):
+                transcript = response["choices"][0]["text"]
+                print(f"Transcript: {transcript}")
+                return transcript
+            else:
+                print("No transcript available.")
+        
+        # Delete the original WAV file
+        #os.remove(audio_file_name)

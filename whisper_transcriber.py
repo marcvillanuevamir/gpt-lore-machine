@@ -1,10 +1,10 @@
-import openai
+from lib.gpt import GPT
+GPT=GPT()
 import pyaudio
 import requests
 import json
 
-# Replace 'your_api_key' with your actual OpenAI API key
-openai.api_key = "your_api_key"
+
 
 # Audio settings
 CHUNK = 1024
@@ -26,7 +26,7 @@ while True:
         data = stream.read(CHUNK)
 
         # Transcribe audio using OpenAI Whisper ASR API
-        response = openai.Audio.transcribe(data, sample_rate_hertz=RATE, encoding='LINEAR16', num_channels=CHANNELS)
+        response = GPT.transcribe(data,RATE,CHANNELS)#openai.Audio.transcribe(data, sample_rate_hertz=RATE, encoding='LINEAR16', num_channels=CHANNELS)
 
         if response.get("choices"):
             transcript = response["choices"][0]["text"]
