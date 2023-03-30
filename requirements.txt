@@ -1,8 +1,11 @@
 openai
 eel
 sentencepiece
-torch
+#torch
 transformers
 sacremoses
 pygame
 sentencepiece
+sounddevice
+pydub
+pyaudio

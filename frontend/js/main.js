@@ -64,7 +64,8 @@ function build_view(o){
                 H+='<input id="'+b.id+'" name="'+b.id+'" >';
             }
             if (b.type=="transcription"){
-                H+='<textarea id="'+b.id+'" placeholder="Transcription will show here..." class="transcription"></textarea>';
+                H+='<div class="livetranscribe"></div>'
+                H+='<textarea id="'+b.id+'" class="transcription"></textarea>';
                 H+='<div class="actions"><button class="btn startrecording">Record</button></div>'
             }
             H+='</div>';
@@ -101,8 +102,18 @@ function end(){
 eel.expose(get_transcription);
 function get_transcription(sentences){
     console.log(sentences);
+    //let newtext=sentences.split('||').join('\n');
+    let newtext=sentences.split('||').join('<br>');
+    $(".livetranscribe").html(newtext);
+    //$(".transcription").val( newtext);
+}
+
+eel.expose(archive_transcription);
+function archive_transcription(sentences){
+    console.log(sentences);
     let newtext=sentences.split('||').join('\n');
-    $(".transcription").val( newtext);
+    let oldtranscription= $(".transcription").val();
+    $(".transcription").val(newtext+'\n\n'+oldtranscription);
 }
 
 eel.expose(res_finished);

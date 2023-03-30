@@ -9,6 +9,7 @@ GPT=GPT()
 recorder=recorder()
 
 templates=glob.glob("templates/*.json")
+templates.sort()
 print(templates)
 template_index=0
 current_template=False

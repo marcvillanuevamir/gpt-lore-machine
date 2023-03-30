@@ -16,7 +16,7 @@ import json
 
 class recorder:
 
-    device_id=1 #this needs to be set based on the machine
+    #device_id=1 #this needs to be set based on the machine
 
     mic_maxBuffer= 15
     speaker_maxBuffer= 10
@@ -27,7 +27,7 @@ class recorder:
     transcribe_rate= 500#500
     sample_rate= 16000
     chunk_size= 1024
-    max_sentences= 2
+    max_sentences= 1
     max_temp= 200
     auto_sample_rate=False
     auto_channels_amount= False
@@ -110,12 +110,16 @@ class recorder:
                      GPT,
         lang_source: str,
         engine: Literal["Whisper", "Google", "LibreTranslate", "MyMemoryTranslator"],
-        device: str,
         transcribe= True,
         translate= False,
         speaker: bool = False,
     ) -> None:
-     
+        
+        pa = pyaudio.PyAudio()
+        device=pa.get_default_input_device_info()
+        device_id=device["index"]
+        print(device)
+
         src_english = lang_source == "english"
         auto = lang_source == "auto detect"
         whisperEngine = engine == "Whisper"
@@ -176,7 +180,7 @@ class recorder:
           
         else:
             # get the device id from sounddevice module
-            device_id = self.device_id#sd.query_devices(device, "input")["index"]  # type: ignore
+            #device_id = device_id#sd.query_devices(device, "input")["index"]  # type: ignore
             device_detail = p.get_device_info_by_index(int(device_id))  # Get device detail
             num_of_channels = 1
 
@@ -332,7 +336,8 @@ class recorder:
                             
                             #here sentences get popped out, so we need to send a signal to fronted 
                             if len(sentences_tc) >= max_sentences:
-                                sentences_tc.pop(0)
+                                toarchive=sentences_tc.pop(0)
+                                eel.archive_transcription(toarchive)
 
                         if translate:
                             sentences_tl.append(prev_tl_text)
@@ -365,7 +370,7 @@ class recorder:
         while self.recording:  # Record in a thread at a fast rate.
             data = self.stream.read(chunk_size)
             energy = audioop.rms(data, 2)
-           
+            print("energy",energy)
             # store chunks of audio in queue
             if not self.enable_threshold:  # record regardless of energy
                 self.data_queue.put(data)
