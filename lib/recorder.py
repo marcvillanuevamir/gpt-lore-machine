@@ -10,9 +10,9 @@ from multiprocessing import Queue
 import io
 import wave
 from time import sleep, time
-import numpy
 import os
 import sys
+import json
 
 class recorder:
 
@@ -39,7 +39,7 @@ class recorder:
     initial_prompt= "" 
     temperature= "0.0, 0.2, 0.4, 0.6, 0.8, 1.0"
 
-    separate_with= "\\n"
+    separate_with= "||"#"&#10;"#"\\n"
 
     dir_temp="tmp"
     recording=False
@@ -106,6 +106,7 @@ class recorder:
         return avg_threshold
     
     def rec_realTime(self,
+                     eel,
                      GPT,
         lang_source: str,
         engine: Literal["Whisper", "Google", "LibreTranslate", "MyMemoryTranslator"],
@@ -267,8 +268,12 @@ class recorder:
                         **whisper_extra_args,
                     )
                     """
-                    result=GPT.transcribe(audio_target)
-                    text = result  
+                    try:
+                        result=GPT.transcribe(audio_target)
+                        text = result 
+                    except:
+                        text=""
+                        #audio too short
                    
 
                     if len(text) > 0 and text != prev_tc_text:
@@ -290,12 +295,17 @@ class recorder:
 
                             # insert the current sentence after previous sentences
                             #gClass.insertMwTbTc(text + separator)
+                            
                             toExTc += text + separator
                             #gClass.insertExTbTc(toExTc)
 
+                            
+                            ######
+                            eel.get_transcription(toExTc)
+                            ######
                             #HERE WE MANAGE THE NEW HANDLE OF TEXT:::::::::::::::::::::::::::::::::::
                             print("t: ",toExTc)
-                            sys.stdout.write("\033[F") # Cursor up one line
+                            #sys.stdout.write("\033[F") # Cursor up one line
                             #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
                         if translate:
@@ -319,6 +329,8 @@ class recorder:
 
                         if transcribe:
                             sentences_tc.append(prev_tc_text)
+                            
+                            #here sentences get popped out, so we need to send a signal to fronted 
                             if len(sentences_tc) >= max_sentences:
                                 sentences_tc.pop(0)
 

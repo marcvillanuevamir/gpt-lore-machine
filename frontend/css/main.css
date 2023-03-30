@@ -78,6 +78,11 @@ input,textarea,select{
 }
 textarea{
     font-size: 15px;
+    min-height: 80vh;
+    margin-bottom: 10px;
+}
+textarea.transcription{
+    font-size: 28px;
 }
 label{
     display: block;

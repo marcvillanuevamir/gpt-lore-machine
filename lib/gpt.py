@@ -106,7 +106,7 @@ class GPT:
         # Transcribe audio using OpenAI Whisper ASR API
         with open(audio_file, 'rb') as data_file:
             response = openai.Audio.transcribe(model,data_file)
-            print("response",response["text"])
+            #print("response",response["text"])
             return response["text"]
             if response.get("choices"):
                 transcript = response["choices"][0]["text"]

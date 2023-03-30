@@ -2,8 +2,11 @@ import eel
 import os
 import glob
 import json
+from lib.recorder import recorder
 from lib.gpt import GPT
+
 GPT=GPT()
+recorder=recorder()
 
 templates=glob.glob("templates/*.json")
 print(templates)
@@ -26,7 +29,10 @@ def get_template():
     except:
       print("Error obrint el template#",template_index)
     return data
-  
+
+@eel.expose
+def start_audio_transcription():
+  recorder.rec_realTime(eel,GPT,"es","es","Whisper")
 
 @eel.expose
 def process_template(data):

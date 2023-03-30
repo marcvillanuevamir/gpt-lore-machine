@@ -24,6 +24,10 @@ $( document ).ready(function() {
         load_template();
     });
 
+    $("#main ").on("click",".startrecording",function(e){
+        eel.start_audio_transcription();
+    });
+
 });
 
 
@@ -59,6 +63,10 @@ function build_view(o){
                 H+='<label>'+b.label+'</label>'
                 H+='<input id="'+b.id+'" name="'+b.id+'" >';
             }
+            if (b.type=="transcription"){
+                H+='<textarea id="'+b.id+'" placeholder="Transcription will show here..." class="transcription"></textarea>';
+                H+='<div class="actions"><button class="btn startrecording">Record</button></div>'
+            }
             H+='</div>';
      
     });
@@ -88,6 +96,13 @@ eel.expose(end);
 function end(){
     let H='<div class="end">Fi</div>';
     $("#main").html(H);
+}
+
+eel.expose(get_transcription);
+function get_transcription(sentences){
+    console.log(sentences);
+    let newtext=sentences.split('||').join('\n');
+    $(".transcription").val( newtext);
 }
 
 eel.expose(res_finished);
