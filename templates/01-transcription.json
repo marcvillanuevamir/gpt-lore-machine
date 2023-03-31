@@ -2,12 +2,21 @@
   "blocks":[
         {"type":"transcription","label":"Transcription","id":"transcription"}
       ],
-      "process":[
-        {"text":"How would a title of a contemporary art museum would be called based on these predictions made by a fortune teller\n "},
-        {"text":"Future: "},
-        {"input":"passat","translate":"ca_en","after":"\n"},
-        {"text":"Past: "},
-        {"input":"futur","translate":"ca_en","after":"\n"},
-        {"text":"The title of the exhibition:\n"}
-        ]
+  "process":[
+    {"options":[
+
+      {"title":"A twitter drama","structure":[
+        {"text":"Make a twitter conversation with people complaining about the contents of the transcription of this talk in the school of fine arts of Marseille: \n The transcription: \n"},
+        {"input":"transcription","after":"\n"},
+        {"text":"The tweets: \n"}
+      ]},
+      {"title":"A rap song","structure":[
+        {"text":"Make a rap song about the transcription of this talk in the school of fine arts of Marseille: \n The transcription: \n"},
+        {"input":"transcription","after":"\n"},
+        {"text":"The song lyrics: \n"}
+      ]}
+
+    ]}
+  
+    ]
   }

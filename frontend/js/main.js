@@ -10,6 +10,16 @@ $( document ).ready(function() {
             data[$(this).attr("name")]=$(this).val();
            
          });  
+         $(".textinputs:visible select[name]").each(function(e){
+            data[$(this).attr("name")]=$(this).val();
+           
+         });  
+
+         $(".textinputs:visible textarea[name]").each(function(e){
+            data[$(this).attr("name")]=$(this).val();
+           
+         });  
+
          $("#loader").show();
          console.log(data);
          send_template(data);
@@ -25,8 +35,37 @@ $( document ).ready(function() {
     });
 
     $("#main ").on("click",".startrecording",function(e){
+        e.preventDefault();
         eel.start_audio_transcription();
+        $(".startrecording").addClass("hidden");
+        $(".stoprecording").removeClass("hidden");
+        $(".pauserecording").removeClass("hidden");
+        eel.change_recording_state("recording");
     });
+
+    $("#main ").on("click",".stoprecording",function(e){
+        e.preventDefault();
+        $(".stoprecording").addClass("hidden");
+        $(".pauserecording").addClass("hidden");
+        $(".resumerecording").addClass("hidden");
+        $(".startrecording").removeClass("hidden");
+        eel.change_recording_state("stop");
+    });
+
+    $("#main ").on("click",".pauserecording",function(e){
+        e.preventDefault();
+        $(".resumerecording").removeClass("hidden");
+        $(".pauserecording").addClass("hidden");
+        eel.change_recording_state("pause");
+    });
+
+    $("#main ").on("click",".resumerecording",function(e){
+        e.preventDefault();
+        $(".resumerecording").toggleClass("hidden");
+        $(".pauserecording").toggleClass("hidden");
+        eel.change_recording_state("recording");
+    });
+
 
 });
 
@@ -65,27 +104,46 @@ function build_view(o){
             }
             if (b.type=="transcription"){
                 H+='<div class="livetranscribe"></div>'
-                H+='<textarea id="'+b.id+'" class="transcription"></textarea>';
-                H+='<div class="actions"><button class="btn startrecording">Record</button></div>'
+                H+='<textarea id="'+b.id+'" class="transcription" name="transcription"></textarea>';
+                H+='<div class="actions">';
+                H+='<button class="btn startrecording">Record</button>';
+                H+='<button class="btn pauserecording hidden">Pause</button>';
+                H+='<button class="btn resumerecording hidden">Resume</button>';
+                H+='<button class="btn stoprecording hidden">End recording</button>';
+                H+='</div>';
             }
             H+='</div>';
      
     });
     
-    H+='<div class="process">'
-    H+='<div class="">'
-    H+='<label># Resultats</label>'
-    H+='<input id="res" name="res" type="number" max="10" step="1" value="1" >';
-    H+='</div>'
-    H+='<input type="submit" class="btn submit" value="Fer prediccions" >';
-    H+='</div>'
-    H+='</form>';
+    H+='<div class="process">';
+    if ("options"in o.process[0]){
+        H+='<div class="bigoptions">';
+        H+='<select name="options">';
+        H+='<option>Choose a template::::</option>';
+        let counter=0;
+        o.process[0]["options"].forEach(function(b) {
+            H+='<option value="'+counter+'">'+b.title+'</option>';
+            counter++;
+        });
+        H+='</select>';
+        H+='</div>';
+    } else {
+        H+='<div class="">'
+        H+='<label># Resultats</label>'
+        H+='<input id="res" name="res" type="number" max="10" step="1" value="1" >';
+        H+='</div>'
+        H+='<input type="submit" class="btn submit" value="Fer prediccions" >';
+        H+='</div>'
+        H+='</form>';
+    
+        H+='<div class="responses" style="display:none">';
+        H+='<h2>Opcions</h2>'
+        H+='<form class="predoptions">';
+        H+='<div class="list">';
+        H+='</div>';
+    }
 
-    H+='<div class="responses" style="display:none">';
-    H+='<h2>Opcions</h2>'
-    H+='<form class="predoptions">';
-    H+='<div class="list">';
-    H+='</div>';
     H+='<input type="submit" class="submit btn" value="Continuar">';
     H+='</form>';
     H+='</div>';
@@ -113,7 +171,15 @@ function archive_transcription(sentences){
     console.log(sentences);
     let newtext=sentences.split('||').join('\n');
     let oldtranscription= $(".transcription").val();
-    $(".transcription").val(newtext+'\n\n'+oldtranscription);
+    $(".transcription").val(oldtranscription+'\n\n'+newtext);
+}
+
+eel.expose(finished_transcription);
+function finished_transcription(){
+    let lasttext=$(".livetranscribe").text();
+    let oldtranscription= $(".transcription").val();
+    $(".transcription").val(oldtranscription+'\n\n'+lasttext);
+    $(".livetranscribe").html("");
 }
 
 eel.expose(res_finished);
@@ -122,8 +188,29 @@ function res_finished(options){
 }
 
 eel.expose(getRes);
-function getRes(res) {
-   let new_res='<div class="res"><input type="radio" name="predresponse" value="'+res+'"><label>'+res+'</label></div>';
-  $(".responses .list").append(new_res);
+function getRes(res,type="radio") {
+    if (type=="radio"){
+        let new_res='<div class="res"><input type="radio" name="predresponse" value="'+res+'"><label>'+res+'</label></div>';
+        $(".responses .list").append(new_res);
+    } else {
+        //block of text with no options to choose 
+
+        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    }
+  
   $(".responses").show();
 }

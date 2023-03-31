@@ -47,10 +47,9 @@ class GPT:
         #print("")
         return r
 
-    def processBlocks(self,template,inputs,candidates=1,eel=False):
-       
+    def genericProcess(self,structure,inputs):
         H=''
-        for p in template["process"]:
+        for p in structure:
             
             if "text" in p:
                 H+=p["text"]
@@ -63,6 +62,22 @@ class GPT:
                 H+=txt
                 if "after" in p:
                     H+=p["after"]
+        return H
+
+    def processBlocks(self,template,inputs,candidates=1,eel=False):
+       
+        H=''
+
+        if "options" in template["process"][0]:
+            print("its an options one")
+            selected=int(inputs["options"])
+            structure=template["process"][0]["options"][selected]["structure"]
+        else:
+            print("its a classic template")
+            structure=template["process"]
+        print("")
+        print("structure",structure)
+        H+=self.genericProcess(structure,inputs)
         print("")
         print("Prompt template ready::::")
         print(H)
@@ -74,10 +89,17 @@ class GPT:
             temp+=0.1
             if temp>1:
                 temp=0.98
+            print("")
+            print("GPT COMPLETE::::")
+            print(":::::::::::::::")
             pred=self.complete(H,temperature=temp,max_tokens=200)
-            r=self.translate(pred,"en","ca")
+            #r=self.translate(pred,"en","ca")
+            r=pred
             #dont wait till the end, send them step by step
-            eel.getRes(r)
+            if (len(candidates)==1):
+                eel.getRes(r,"textarea")
+            else:
+                eel.getRes(r,"radio")
             
             res.append(r)
         return res

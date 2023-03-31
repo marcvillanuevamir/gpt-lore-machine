@@ -20,7 +20,7 @@ class recorder:
 
     mic_maxBuffer= 15
     speaker_maxBuffer= 10
-    mic_energy_threshold= 400
+    mic_energy_threshold= 600
     speaker_energy_threshold= 5000
     enable_threshold= True
     debug_energy= False
@@ -43,6 +43,9 @@ class recorder:
 
     dir_temp="tmp"
     recording=False
+
+    #controls the state of transcription recording process
+    recording_action="recording"
    
     data_queue = Queue()
 
@@ -106,6 +109,7 @@ class recorder:
         return avg_threshold
     
     def rec_realTime(self,
+                    
                      eel,
                      GPT,
         lang_source: str,
@@ -114,7 +118,7 @@ class recorder:
         translate= False,
         speaker: bool = False,
     ) -> None:
-        
+       
         pa = pyaudio.PyAudio()
         device=pa.get_default_input_device_info()
         device_id=device["index"]
@@ -199,150 +203,154 @@ class recorder:
         self.recording=True
         # transcribing thread
         while self.recording:
-            if not self.data_queue.empty():
-                now = datetime.utcnow()
-                # Set next_transcribe_time for the first time.
-                if not next_transcribe_time:
-                    next_transcribe_time = now + transcribe_rate
+            #print("recording_action",self.recording_action)
+            if self.recording_action=="stop":
+                self.recording=False
+            if self.recording_action=="recording":
+                if not self.data_queue.empty():
+                    now = datetime.utcnow()
+                    # Set next_transcribe_time for the first time.
+                    if not next_transcribe_time:
+                        next_transcribe_time = now + transcribe_rate
 
-                # Only run transcription occasionally. This reduces stress on the GPU and makes transcriptions
-                # more accurate because they have more audio context, but makes the transcription less real time.
-                if now > next_transcribe_time:
-                    #print("dale transcribe")
-                    next_transcribe_time = now + transcribe_rate
+                    # Only run transcription occasionally. This reduces stress on the GPU and makes transcriptions
+                    # more accurate because they have more audio context, but makes the transcription less real time.
+                    if now > next_transcribe_time:
+                        #print("dale transcribe")
+                        next_transcribe_time = now + transcribe_rate
 
-                    # Getting the stream data from the queue.
-                    while not self.data_queue.empty():
-                        data = self.data_queue.get()
-                        last_sample += data
+                        # Getting the stream data from the queue.
+                        while not self.data_queue.empty():
+                            data = self.data_queue.get()
+                            last_sample += data
 
-                    # Write out raw frames as a wave file.
-                    wav_file = io.BytesIO()
-                    wav_writer: wave.Wave_write = wave.open(wav_file, "wb")
-                    wav_writer.setframerate(sample_rate)
-                    wav_writer.setsampwidth(p.get_sample_size(pyaudio.paInt16))
-                    wav_writer.setnchannels(num_of_channels)
-                    wav_writer.writeframes(last_sample)  # get the audio data from the buffer.
-                    wav_writer.close()
+                        # Write out raw frames as a wave file.
+                        wav_file = io.BytesIO()
+                        wav_writer: wave.Wave_write = wave.open(wav_file, "wb")
+                        wav_writer.setframerate(sample_rate)
+                        wav_writer.setsampwidth(p.get_sample_size(pyaudio.paInt16))
+                        wav_writer.setnchannels(num_of_channels)
+                        wav_writer.writeframes(last_sample)  # get the audio data from the buffer.
+                        wav_writer.close()
 
-                    # Read the audio data
-                    wav_file.seek(0)
-                    wav_reader: wave.Wave_read = wave.open(wav_file)
-                    samples = wav_reader.getnframes()
-                    audio = wav_reader.readframes(samples)
-                    wav_reader.close()
+                        # Read the audio data
+                        wav_file.seek(0)
+                        wav_reader: wave.Wave_read = wave.open(wav_file)
+                        samples = wav_reader.getnframes()
+                        audio = wav_reader.readframes(samples)
+                        wav_reader.close()
 
+                        
+                        #if num_of_channels > 1:
+                        # If not mono, the fast method does not work so we have to resort to using the old, a little slower, but working method
+                        # which is to save the audio file and read it directly to the whisper model
+                        audio_target = os.path.join(self.dir_temp, datetime.now().strftime("%Y-%m-%d %H_%M_%S_%f")) + ".wav"
+                        tempList.append(audio_target)  # add to the temp list to delete later
+
+                        # block until the file is written
+                        timeNow = time()
+                        with open(audio_target, "wb") as f:
+                            f.write(wav_file.getvalue())  # write it
+                        timeTaken = time() - timeNow
+                        
+
+                        # delete the oldest file if the temp list is too long
+                        if len(tempList) > self.max_temp and not self.keep_temp:
+                            os.remove(tempList[0])
+                            tempList.pop(0)
+                        """
+                        else:
+                            # Convert the wave data straight to a numpy array for the model.
+                            # https://stackoverflow.com/a/62298670
+                            audio_as_np_int16 = numpy.frombuffer(audio, dtype=numpy.int16)
+                            audio_as_np_float32 = audio_as_np_int16.astype(numpy.float32)
+                            audio_target = audio_as_np_float32 / max_int16  # normalized as Numpy array
+                        """
+                        """
+                        result = model.transcribe(
+                            audio_target,
+                            language=lang_source if not auto else None,
+                            task=task,
+                            temperature=temperature,
+                            compression_ratio_threshold=compression_ratio_threshold,
+                            logprob_threshold=logprob_threshold,
+                            no_speech_threshold=no_speech_threshold,
+                            condition_on_previous_text=condition_on_previous_text,
+                            initial_prompt=initial_prompt,
+                            **whisper_extra_args,
+                        )
+                        """
+                        try:
+                            result=GPT.transcribe(audio_target)
+                            text = result 
+                        except:
+                            text=""
+                            #audio too short
                     
-                    #if num_of_channels > 1:
-                    # If not mono, the fast method does not work so we have to resort to using the old, a little slower, but working method
-                    # which is to save the audio file and read it directly to the whisper model
-                    audio_target = os.path.join(self.dir_temp, datetime.now().strftime("%Y-%m-%d %H_%M_%S_%f")) + ".wav"
-                    tempList.append(audio_target)  # add to the temp list to delete later
 
-                    # block until the file is written
-                    timeNow = time()
-                    with open(audio_target, "wb") as f:
-                        f.write(wav_file.getvalue())  # write it
-                    timeTaken = time() - timeNow
-                    
-
-                    # delete the oldest file if the temp list is too long
-                    if len(tempList) > self.max_temp and not self.keep_temp:
-                        os.remove(tempList[0])
-                        tempList.pop(0)
-                    """
-                    else:
-                        # Convert the wave data straight to a numpy array for the model.
-                        # https://stackoverflow.com/a/62298670
-                        audio_as_np_int16 = numpy.frombuffer(audio, dtype=numpy.int16)
-                        audio_as_np_float32 = audio_as_np_int16.astype(numpy.float32)
-                        audio_target = audio_as_np_float32 / max_int16  # normalized as Numpy array
-                    """
-                    """
-                    result = model.transcribe(
-                        audio_target,
-                        language=lang_source if not auto else None,
-                        task=task,
-                        temperature=temperature,
-                        compression_ratio_threshold=compression_ratio_threshold,
-                        logprob_threshold=logprob_threshold,
-                        no_speech_threshold=no_speech_threshold,
-                        condition_on_previous_text=condition_on_previous_text,
-                        initial_prompt=initial_prompt,
-                        **whisper_extra_args,
-                    )
-                    """
-                    try:
-                        result=GPT.transcribe(audio_target)
-                        text = result 
-                    except:
-                        text=""
-                        #audio too short
-                   
-
-                    if len(text) > 0 and text != prev_tc_text:
-                        prev_tc_text = text
-                        if transcribe:
-                            # this works like this:
-                            # clear the textbox first, then insert the text. The text inserted is a continuation of the previous text.
-                            # the longer it is the clearer the transcribed text will be, because of more context.
-                           
-                       
-                            #gClass.clearMwTc()
-                            #gClass.clearExTc()
-                            toExTc = ""
-
-                            # insert previous sentences if there are any
-                            for sentence in sentences_tc:
-                                #gClass.insertMwTbTc(sentence + separator)
-                                toExTc += sentence + separator
-
-                            # insert the current sentence after previous sentences
-                            #gClass.insertMwTbTc(text + separator)
+                        if len(text) > 0 and text != prev_tc_text:
+                            prev_tc_text = text
+                            if transcribe:
+                                # this works like this:
+                                # clear the textbox first, then insert the text. The text inserted is a continuation of the previous text.
+                                # the longer it is the clearer the transcribed text will be, because of more context.
                             
-                            toExTc += text + separator
-                            #gClass.insertExTbTc(toExTc)
+                        
+                                #gClass.clearMwTc()
+                                #gClass.clearExTc()
+                                toExTc = ""
 
+                                # insert previous sentences if there are any
+                                for sentence in sentences_tc:
+                                    #gClass.insertMwTbTc(sentence + separator)
+                                    toExTc += sentence + separator
+
+                                # insert the current sentence after previous sentences
+                                #gClass.insertMwTbTc(text + separator)
+                                
+                                toExTc += text + separator
+                                #gClass.insertExTbTc(toExTc)
+
+                                
+                                ######
+                                eel.get_transcription(toExTc)
+                                ######
+                                #HERE WE MANAGE THE NEW HANDLE OF TEXT:::::::::::::::::::::::::::::::::::
+                                print("t: ",toExTc)
+                                #sys.stdout.write("\033[F") # Cursor up one line
+                                #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+                            if translate:
+                                
+                                tlThread = threading.Thread(
+                                    target=GPT.transcribe,
+                                    args=[
+                                        audio_target
+                                        
+                                    ],
+                                    daemon=True,
+                                )
+                                tlThread.start()
                             
-                            ######
-                            eel.get_transcription(toExTc)
-                            ######
-                            #HERE WE MANAGE THE NEW HANDLE OF TEXT:::::::::::::::::::::::::::::::::::
-                            print("t: ",toExTc)
-                            #sys.stdout.write("\033[F") # Cursor up one line
-                            #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-                        if translate:
-                            
-                            tlThread = threading.Thread(
-                                target=GPT.transcribe,
-                                args=[
-                                    audio_target
-                                    
-                                ],
-                                daemon=True,
-                            )
-                            tlThread.start()
-                           
+                        # break up the buffer If we've reached max recording time
+                        audio_length_in_seconds = samples / float(sample_rate)
+                        
+                        if audio_length_in_seconds > max_record_time:
+                            last_sample = bytes()
 
-                    # break up the buffer If we've reached max recording time
-                    audio_length_in_seconds = samples / float(sample_rate)
-                    
-                    if audio_length_in_seconds > max_record_time:
-                        last_sample = bytes()
+                            if transcribe:
+                                sentences_tc.append(prev_tc_text)
+                                
+                                #here sentences get popped out, so we need to send a signal to fronted 
+                                if len(sentences_tc) >= max_sentences:
+                                    toarchive=sentences_tc.pop(0)
+                                    eel.archive_transcription(toarchive)
 
-                        if transcribe:
-                            sentences_tc.append(prev_tc_text)
-                            
-                            #here sentences get popped out, so we need to send a signal to fronted 
-                            if len(sentences_tc) >= max_sentences:
-                                toarchive=sentences_tc.pop(0)
-                                eel.archive_transcription(toarchive)
-
-                        if translate:
-                            sentences_tl.append(prev_tl_text)
-                            if len(sentences_tl) >= max_sentences:
-                                sentences_tl.pop(0)
+                            if translate:
+                                sentences_tl.append(prev_tl_text)
+                                if len(sentences_tl) >= max_sentences:
+                                    sentences_tl.pop(0)
 
             sleep(0.1)
         else:
@@ -360,7 +368,8 @@ class recorder:
                         os.remove(audio)
                     except FileNotFoundError:
                         pass
-              
+        eel.finished_transcription()
+        print("FINISHED RECORDING THREAD")
 
 
     def realtime_recording_thread(self,chunk_size: int, rec_type: Literal["mic", "speaker"]):
@@ -368,13 +377,14 @@ class recorder:
         """Record Audio From stream buffer and save it to a queue"""
         assert self.stream is not None
         while self.recording:  # Record in a thread at a fast rate.
-            data = self.stream.read(chunk_size)
-            energy = audioop.rms(data, 2)
-            print("energy",energy)
-            # store chunks of audio in queue
-            if not self.enable_threshold:  # record regardless of energy
-                self.data_queue.put(data)
-            
-            elif energy > self.mic_energy_threshold and self.enable_threshold:  # only record if energy is above threshold
-                #print("rec")
-                self.data_queue.put(data)
+            if self.recording_action=="recording":
+                data = self.stream.read(chunk_size)
+                energy = audioop.rms(data, 2)
+                #print("energy",energy)
+                # store chunks of audio in queue
+                if not self.enable_threshold:  # record regardless of energy
+                    self.data_queue.put(data)
+                
+                elif energy > self.mic_energy_threshold and self.enable_threshold:  # only record if energy is above threshold
+                    #print("rec")
+                    self.data_queue.put(data)

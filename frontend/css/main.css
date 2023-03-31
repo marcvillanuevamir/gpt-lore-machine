@@ -12,6 +12,9 @@ body{
 body,input{
     font-family: Lato, Arial !important;
 }
+.hidden{
+    display: none !important;
+}
 #main {
     
     padding: 40px;
@@ -36,6 +39,7 @@ body,input{
     justify-content: space-between;
     margin-top: 20px;
     margin-bottom: 20px;
+    align-items: center;
 }
 .process label{
     display: block;
@@ -81,9 +85,7 @@ textarea{
     min-height: 80vh;
     margin-bottom: 10px;
 }
-textarea.transcription{
-    
-}
+
 .livetranscribe{
     font-size: 28px;
 }
@@ -94,7 +96,10 @@ label{
 textarea.bigtextarea{
    height: calc(100vh - 280px);
 }
-
+.bigoptions{
+    flex:1;
+    margin-right: 20px;
+}
 .btn{
     background-color: #07A651;
     border-radius: 12px;
@@ -113,6 +118,12 @@ textarea.bigtextarea{
     padding: 15px 60px;
     font-size: 32px;
 
+}
+.btn.stoprecording{
+background-color: red;
+}
+.actions .btn{
+    margin-right: 5px;
 }
 .center{
     align-content: center;
