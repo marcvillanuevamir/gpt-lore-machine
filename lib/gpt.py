@@ -96,7 +96,7 @@ class GPT:
             #r=self.translate(pred,"en","ca")
             r=pred
             #dont wait till the end, send them step by step
-            if (len(candidates)==1):
+            if (candidates==1):
                 eel.getRes(r,"textarea")
             else:
                 eel.getRes(r,"radio")

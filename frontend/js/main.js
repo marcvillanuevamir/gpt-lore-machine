@@ -23,6 +23,7 @@ $( document ).ready(function() {
          $("#loader").show();
          console.log(data);
          send_template(data);
+         scrolltoBottom();
     });
 
     $("#main ").on("click",".predoptions .submit",function(e){
@@ -32,6 +33,7 @@ $( document ).ready(function() {
         console.log(data);
         eel.save_page(data);
         load_template();
+        scrolltoBottom();
     });
 
     $("#main ").on("click",".startrecording",function(e){
@@ -127,24 +129,26 @@ function build_view(o){
             counter++;
         });
         H+='</select>';
+        H+='<input type="submit" class="btn submit" value="Make predictions" >';
         H+='</div>';
     } else {
         H+='<div class="">'
-        H+='<label># Resultats</label>'
+        H+='<label># Results</label>'
         H+='<input id="res" name="res" type="number" max="10" step="1" value="1" >';
         H+='</div>'
-        H+='<input type="submit" class="btn submit" value="Fer prediccions" >';
-        H+='</div>'
-        H+='</form>';
-    
-        H+='<div class="responses" style="display:none">';
-        H+='<h2>Opcions</h2>'
-        H+='<form class="predoptions">';
-        H+='<div class="list">';
+        H+='<input type="submit" class="btn submit" value="Make predictions" >';
         H+='</div>';
+    
+       
     }
-
-    H+='<input type="submit" class="submit btn" value="Continuar">';
+    H+='</div>';
+    H+='</form>';
+    H+='<div class="responses" style="display:none">';
+    // H+='<h2>Options</h2>'
+     H+='<form class="predoptions">';
+     H+='<div class="list">';
+     H+='</div>';
+    H+='<input type="submit" class="submit btn" value="Continue">';
     H+='</form>';
     H+='</div>';
     console.log(H);
@@ -171,7 +175,8 @@ function archive_transcription(sentences){
     console.log(sentences);
     let newtext=sentences.split('||').join('\n');
     let oldtranscription= $(".transcription").val();
-    $(".transcription").val(oldtranscription+'\n\n'+newtext);
+    $(".transcription").val((oldtranscription+'\n\n'+newtext).trim());
+    $(".livetranscribe").html("")
 }
 
 eel.expose(finished_transcription);
@@ -185,6 +190,7 @@ function finished_transcription(){
 eel.expose(res_finished);
 function res_finished(options){
     $("#loader").hide();
+    scrolltoBottom();
 }
 
 eel.expose(getRes);
@@ -194,23 +200,16 @@ function getRes(res,type="radio") {
         $(".responses .list").append(new_res);
     } else {
         //block of text with no options to choose 
-
-        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-        ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        let new_res='<div class="res"><textarea name="predresponse" >'+res+'</textarea></div>';
+        $(".responses .list").append(new_res);
+  
     }
   
   $(".responses").show();
+}
+
+
+//helpers
+function scrolltoBottom(){
+    $('body,html').animate({ scrollTop: $('body').height() }, 800);
 }
