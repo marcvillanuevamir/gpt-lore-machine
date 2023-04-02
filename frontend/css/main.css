@@ -82,12 +82,13 @@ input,textarea,select,.livetranscribe{
 }
 textarea{
     font-size: 15px;
-    min-height: 80vh;
-    margin-bottom: 10px;
+    min-height: 70vh;
+
 }
 
 .livetranscribe{
     font-size: 28px;
+    margin-bottom: 10px;
 }
 label{
     display: block;

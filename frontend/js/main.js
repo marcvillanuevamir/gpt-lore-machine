@@ -105,8 +105,9 @@ function build_view(o){
                 H+='<input id="'+b.id+'" name="'+b.id+'" >';
             }
             if (b.type=="transcription"){
-                H+='<div class="livetranscribe"></div>'
+               
                 H+='<textarea id="'+b.id+'" class="transcription" name="transcription"></textarea>';
+                H+='<div class="livetranscribe"></div>'
                 H+='<div class="actions">';
                 H+='<button class="btn startrecording">Record</button>';
                 H+='<button class="btn pauserecording hidden">Pause</button>';
@@ -211,5 +212,5 @@ function getRes(res,type="radio") {
 
 //helpers
 function scrolltoBottom(){
-    $('body,html').animate({ scrollTop: $('body').height() }, 800);
+    $('body,html').animate({ scrollTop: $('#main').height() }, 800);
 }
