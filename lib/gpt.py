@@ -1,13 +1,11 @@
-import os
+import os,sys
 import openai
 import io
 from pydub import AudioSegment
 import tempfile
 import configparser
 from lib.recorder import recorder
-config = configparser.ConfigParser()
-config.read('config.ini')
-openai.api_key = config["OPENAI"]["apikey"]
+
 
 
 class GPT:
@@ -15,7 +13,20 @@ class GPT:
     model="text-davinci-003"
    
     def __init__(self):
-        pass 
+        # determine if application is a script file or frozen exe
+        if getattr(sys, 'frozen', False):
+            print("frozen executable")
+            self.application_path = os.path.dirname(sys.executable) 
+            print(self.application_path)
+        elif __file__:
+            print("not frozen")
+            self.application_path = ""#os.path.dirname(__file__)
+            print(self.application_path)
+
+        config = configparser.ConfigParser()
+        config.read(self.getPath('config.ini'))
+        openai.api_key = config["OPENAI"]["apikey"]
+      
 
     def init_recorder(self):
         self.recorder=recorder()
@@ -139,3 +150,9 @@ class GPT:
         
         # Delete the original WAV file
         #os.remove(audio_file_name)
+
+
+
+    def getPath(self,filename):
+        actualpath = os.path.join(self.application_path, filename)
+        return actualpath
