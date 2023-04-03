@@ -6,9 +6,9 @@
     {"options":[
 
       {"title":"A twitter drama","structure":[
-        {"text":"Make a twitter conversation with people complaining about the contents of the transcription of this talk in the school of fine arts of Marseille: \n The transcription: \n"},
+        {"text":"Faites une conversation sur Twitter avec des personnes qui se plaignent du contenu de cette conférence à l'école des beaux-arts de Marseille :\n"},
         {"input":"transcription","after":"\n"},
-        {"text":"The tweets: \n"}
+        {"text":"Les tweets: \n"}
       ]},
       {"title":"A rap song","structure":[
         {"text":"Make a rap song about the transcription of this talk in the school of fine arts of Marseille: \n The transcription: \n"},

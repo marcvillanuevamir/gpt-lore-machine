@@ -20,7 +20,7 @@ class GPT:
     def init_recorder(self):
         self.recorder=recorder()
 
-    def complete(self,prompt="",temperature=0.8,max_tokens=7):
+    def complete(self,prompt="",temperature=0.9,max_tokens=7):
         r=openai.Completion.create(
             model=self.model,
             prompt=prompt,
