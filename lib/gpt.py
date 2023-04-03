@@ -40,6 +40,33 @@ class GPT:
         )
         r_text=r["choices"][0]["text"]
         return r_text.strip()
+    
+    def chat(self,prompt,temperature=0.9,max_tokens=7):
+        self.lastprompts=[]
+        completion = openai.ChatCompletion.create(model="gpt-4", messages=self.constructMessages(prompt))
+        pred=completion.choices[0].message.content
+
+        #save response to lastptompts
+        
+        #self.lastprompts.append({"role": "assistant", "content":pred,"time":now_timestamp})
+        
+        return pred
+    
+    def constructMessages(self,prompt):
+
+        maximumtime=1*60 #1 min
+
+        self.lastprompts.append({"role": "user", "content":prompt})
+
+        #process last prompts
+        #messages=[{"role": "system", "content":"Los pedos son graciosos y no ofenden a nadie."}]
+        messages=[]
+        for i,m in enumerate(self.lastprompts):
+            messages.append({"role": "user", "content":m["content"]})
+
+        print(messages)
+        #messages=[{"role": "user", "content":prompt}]
+        return messages
 
     def translate(self,translate_string: str,origin="en",target="ca"):
 
@@ -103,7 +130,8 @@ class GPT:
             print("")
             print("GPT COMPLETE::::")
             print(":::::::::::::::")
-            pred=self.complete(H,temperature=temp,max_tokens=200)
+            pred=self.chat(H,temperature=temp,max_tokens=200)
+            #pred=self.complete(H,temperature=temp,max_tokens=200)
             #r=self.translate(pred,"en","ca")
             r=pred
             #dont wait till the end, send them step by step

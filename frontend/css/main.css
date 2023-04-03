@@ -89,6 +89,7 @@ textarea{
 .livetranscribe{
     font-size: 28px;
     margin-bottom: 10px;
+    min-height: 49px;
 }
 label{
     display: block;
