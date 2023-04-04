@@ -36,6 +36,11 @@ $( document ).ready(function() {
         scrolltoBottom();
     });
 
+    
+    $("#main ").on("click",".startrecording",function(e){
+        eel.init_transcription_projector();
+    })
+
     $("#main ").on("click",".startrecording",function(e){
         e.preventDefault();
         eel.start_audio_transcription();
@@ -113,6 +118,8 @@ function build_view(o){
                 H+='<button class="btn pauserecording hidden">Pause</button>';
                 H+='<button class="btn resumerecording hidden">Resume</button>';
                 H+='<button class="btn stoprecording hidden">End recording</button>';
+                H+='<button class="btn startprojector">Start projector</button>';
+                
                 H+='</div>';
             }
             H+='</div>';
