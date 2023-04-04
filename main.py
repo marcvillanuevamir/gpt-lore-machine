@@ -5,6 +5,7 @@ import json
 from lib.recorder import recorder
 from lib.gpt import GPT
 from threading import Thread
+import multiprocessing
 import sys
 
 if __name__=='__main__':
