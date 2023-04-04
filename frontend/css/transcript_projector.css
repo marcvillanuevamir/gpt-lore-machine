@@ -1,0 +1,12 @@
+html{
+
+}
+body{
+    background-color: black;
+    color:white;
+    font-family: 'IBM Plex Mono', monospace;
+
+    font-size: 5vw;
+    letter-spacing: -0.05em;
+    line-height: 1em;
+}

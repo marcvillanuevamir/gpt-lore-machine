@@ -87,7 +87,7 @@ if __name__=='__main__':
 
   @eel.expose
   def init_transcription_projector():
-    eel.show('projector_control.html')
+    eel.show('transcript_projector.html')
 
   #audio functions:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
   @eel.expose
@@ -105,6 +105,7 @@ if __name__=='__main__':
 
 
   eel.init('frontend')
-  eel.start('index.html')
+  #eel.show('transcript_projector.html')
+  eel.start('index.html',cmdline_args=['--autoplay-policy=no-user-gesture-required'])
 
 

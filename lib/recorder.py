@@ -314,6 +314,7 @@ class recorder:
                                 
                                 ######
                                 eel.get_transcription(toExTc)
+                                eel.puton_transcript_projector(toExTc)
                                 ######
                                 #HERE WE MANAGE THE NEW HANDLE OF TEXT:::::::::::::::::::::::::::::::::::
                                 print("t: ",toExTc)

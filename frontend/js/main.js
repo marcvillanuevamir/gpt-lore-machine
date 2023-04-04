@@ -1,6 +1,7 @@
 $( document ).ready(function() {
 
     load_template();
+    window.hasprojector=false;
 
     $("#main ").on("click",".textinputs .submit",function(e){
         e.preventDefault();
@@ -37,8 +38,10 @@ $( document ).ready(function() {
     });
 
     
-    $("#main ").on("click",".startrecording",function(e){
+    $("#main ").on("click",".startprojector",function(e){
+        e.preventDefault();
         eel.init_transcription_projector();
+        window.hasprojector=true;
     })
 
     $("#main ").on("click",".startrecording",function(e){
@@ -171,10 +174,11 @@ function end(){
 
 eel.expose(get_transcription);
 function get_transcription(sentences){
-    console.log(sentences);
+    //console.log(sentences);
     //let newtext=sentences.split('||').join('\n');
     let newtext=sentences.split('||').join('<br>');
     $(".livetranscribe").html(newtext);
+    
     //$(".transcription").val( newtext);
 }
 
