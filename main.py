@@ -84,6 +84,10 @@ if __name__=='__main__':
 
     template_index+=1
 
+  @eel.expose
+  def init_transcription_projector():
+    eel.show('projector_control.html')
+
   #audio functions:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
   @eel.expose
   def start_audio_transcription():
