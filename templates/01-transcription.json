@@ -5,32 +5,28 @@
   "process":[
     {"options":[
 
-      {"title":"cours pour des étudiants de Master en Arts","structure":[
+      {"title":"01 - cours pour des étudiants de Master en Arts","structure":[
         {"text":"transforme ce texte en cours pour des étudiants de Master en Arts :\n"},
         {"input":"transcription","after":"\n"}
        
       ]},
-      {"title":"article universitaire","structure":[
+      {"title":"02 - article universitaire","structure":[
         {"text":"transforme ce texte en article universitaire :\n"},
         {"input":"transcription","after":"\n"}
        
       ]},
-      {"title":"8 ans","structure":[
+      {"title":"03 - 8 ans","structure":[
         {"text":"transforme ce texte en texte pour enfant de 8 ans :\n"},
         {"input":"transcription","after":"\n"}
        
       ]},
-      {"title":"article universitaire","structure":[
-        {"text":"transforme ce texte en article universitaire :\n"},
-        {"input":"transcription","after":"\n"}
-       
-      ]},
-      {"title":"circulaire administrative","structure":[
+    
+      {"title":"04 circulaire administrative","structure":[
         {"text":"transforme ce texte en circulaire administrative:\n"},
         {"input":"transcription","after":"\n"}
        
       ]},
-      {"title":"chanson","structure":[
+      {"title":"05 - chanson","structure":[
         {"text":"transforme ce texte en chanson :\n"},
         {"input":"transcription","after":"\n"}
        

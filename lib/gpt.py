@@ -45,7 +45,7 @@ class GPT:
         self.lastprompts=[]
         completion = openai.ChatCompletion.create(model="gpt-4", messages=self.constructMessages(prompt))
         pred=completion.choices[0].message.content
-
+        
         #save response to lastptompts
         
         #self.lastprompts.append({"role": "assistant", "content":pred,"time":now_timestamp})

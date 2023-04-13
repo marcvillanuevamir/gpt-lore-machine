@@ -283,7 +283,8 @@ class recorder:
                         try:
                             result=GPT.transcribe(audio_target)
                             text = result 
-                        except:
+                        except Exception as E:
+                            print(E)
                             text=""
                             #audio too short
                     
