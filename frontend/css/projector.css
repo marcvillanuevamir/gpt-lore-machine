@@ -17,6 +17,10 @@ body{
    /* font-family: 'Source Code Pro', monospace;*/
    
     letter-spacing: -2px;
+    height: 94vh;
+    overflow-y: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 #three{
     position: fixed;
@@ -75,7 +79,7 @@ text-shadow: #FFF 0px 0px 5px, #FFF 0px 0px 10px, #FFF 0px 0px 15px, #FF2D95 0px
     -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
-#conversation::-webkit-scrollbar{
+#conversation::-webkit-scrollbar,#texttype::-webkit-scrollbar{
     display: none;
 }
 #prompt.disabled{

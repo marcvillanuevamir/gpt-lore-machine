@@ -11,6 +11,7 @@ from lib.recorder import recorder
 class GPT:
     
     model="text-davinci-003"
+    streaming=False #serves as an interruptor for stream methods
    
     def __init__(self):
         # determine if application is a script file or frozen exe
@@ -53,36 +54,35 @@ class GPT:
         return pred
     
     def chat2(self,chunkhandler,chats,system,model="gpt-3.5-turbo",temperature=0.9,max_tokens=260):
-        
-        
+        self.streaming=True
         messages=[{"role":"system","content":system}]
-
         for m in chats:
             messages.append(m)
-
         print("messages",messages)
         
-        
         response= openai.ChatCompletion.create(model=model, messages= messages,temperature=temperature, stream=True)
-
+        pred=""
         for chunk in response:
+            if self.streaming:
+                answer=chunk["choices"][0]["delta"]
+                if chunk["choices"][0]["finish_reason"]=="stop":
+                    #end of response
+                    print("ENDDD:::::::::::::::")
+                    chunkhandler("<STOP>")
+                if "content" in answer:
+                    chunkhandler(answer["content"])
+                    #sys.stdout.write(answer["content"])
+                    #sys.stdout.flush()
+                    pred+=answer["content"]
+                    #print(answer["content"])
             
-            answer=chunk["choices"][0]["delta"]
-            if chunk["choices"][0]["finish_reason"]=="stop":
-                #end of response
-                print("ENDDD:::::::::::::::")
+                #print(msg.choices[0].text)
+                #sys.stdout.write(chunk.choices[0]["delta"]["content"])
+                #sys.stdout.flush()
+            else:
                 chunkhandler("<STOP>")
-            if "content" in answer:
-                chunkhandler(answer["content"])
-                sys.stdout.write(answer["content"])
-                sys.stdout.flush()
-                #print(answer["content"])
-          
-            #print(msg.choices[0].text)
-            #sys.stdout.write(chunk.choices[0]["delta"]["content"])
-            #sys.stdout.flush()
-        
-        #return True
+        self.streaming=False
+        return pred
      
            
     
@@ -139,8 +139,8 @@ class GPT:
         print("H",H)
         return H
 
-    def processBlocks(self,template,inputs,candidates=1,eel=False):
-       
+    def processBlocks(self,template,inputs,candidates=1,eel=False,project=False,stream=False):
+
         H=''
   
         if "options" in template["process"]:
@@ -167,7 +167,12 @@ class GPT:
             print("")
             print("GPT COMPLETE::::")
             print(":::::::::::::::")
-            pred=self.chat(H,temperature=temp,max_tokens=200)
+            if stream:
+                chats=[{"role":"user","content":H}]
+                system=""
+                pred=self.chat2(eel.getPredictionChunk,chats,system,model="gpt-4",temperature=0.9,max_tokens=1200)
+            else:   
+                pred=self.chat(H,temperature=temp,max_tokens=200)
             #pred=self.complete(H,temperature=temp,max_tokens=200)
             #r=self.translate(pred,"en","ca")
             r=pred

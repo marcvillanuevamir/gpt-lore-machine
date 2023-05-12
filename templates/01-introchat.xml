@@ -30,7 +30,7 @@ Talk in catalan
       <type>textarea</type>
       <label>LORE</label>
       <value>
-Say hi in french
+Write a paragraph about AI
       </value>
       <id>lore</id>
     </block>

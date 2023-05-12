@@ -7,6 +7,8 @@ from lib.gpt import GPT
 from threading import Thread
 import multiprocessing
 import sys
+from time import sleep
+from datetime import datetime
 import xml.etree.ElementTree as ET
 
 #helpers
@@ -83,6 +85,22 @@ if __name__=='__main__':
       return data
 
   @eel.expose
+  def initProjector():
+     timest=datetime.timestamp(datetime.now())
+     eel.preStartProjector(timest)
+
+  @eel.expose
+  def endProjection():
+     GPT.streaming=False
+     sleep(0.5)
+     eel.endProjection()
+
+  @eel.expose
+  def launch_template(data):
+    process = Thread( target= process_template, args=(data,) )
+    process.start()
+
+  #@eel.expose
   def process_template(data):
     global current_template
     data=json.loads(data)
@@ -95,7 +113,13 @@ if __name__=='__main__':
       candidates=data["res"]
     else:
       candidates=1
-    res=GPT.processBlocks(current_template,data,int(candidates),eel)
+    if data["projectprediction"]=="on":
+      #projectorthread = Thread( target= eel.preStartProjector, args=("",) )
+      #projectorthread.start()
+      
+      res=GPT.processBlocks(current_template,data,int(candidates),eel,True,True)
+    else:
+      res=GPT.processBlocks(current_template,data,int(candidates),eel)
     print(res)
     #template_index+=1
     eel.res_finished(res)

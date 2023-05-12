@@ -3,6 +3,12 @@ $( document ).ready(function() {
     load_template();
     window.hasprojector=false;
 
+    $("#statusbar").on("click",".cancelprojection",function(e){
+        e.preventDefault();
+        eel.endProjection();
+        changeStatus("IDDLE");
+    });
+
     $("#main ").on("click",".textinputs .submit",function(e){
         e.preventDefault();
         let data={};
@@ -20,6 +26,12 @@ $( document ).ready(function() {
             data[$(this).attr("name")]=$(this).val();
            
          });  
+
+         data["projectprediction"]=$("#project").val();
+
+         if (data["projectprediction"]=="on"){
+            changeStatus("GENERATION STREAM");
+         }
 
          $("#loader").show();
          console.log(data);
@@ -43,6 +55,7 @@ $( document ).ready(function() {
         e.preventDefault();
         let system=$(".chatsystem").val();
         let engine=$(".chatengine").val();
+        changeStatus("CHAT");
         eel.startChat(system,engine);
     });
 
@@ -100,13 +113,24 @@ async function load_template() {
         }
     }
 
-async function send_template(data){
-    var r =eel.process_template( JSON.stringify(data))();
-    if (r){
-        //alert("rebut!")
-    } else {
-        alert("error template process")
-    }
+
+
+function send_template(data){
+
+    eel.initProjector()
+    setTimeout(function(){
+        //async function send_template(data){
+        //var r =eel.process_template( JSON.stringify(data))();
+        eel.launch_template( JSON.stringify(data))
+        /*
+        if (r){
+            //add project button
+            //alert("rebut!")
+        } else {
+            alert("error template process")
+        }
+        */
+    }, 1000);
 }
 
 function build_view(o){
@@ -171,6 +195,7 @@ function build_view(o){
             counter++;
         });
         H+='</select>';
+        //H+='<input type="checkbox" checked id="project" name="project"> <label for="project">Send to projector?</label>';
         H+='<input type="submit" class="btn submit" value="Make predictions" >';
         H+='</div>';
     } else {
@@ -178,7 +203,10 @@ function build_view(o){
         H+='<label># Results</label>'
         H+='<input id="res" name="res" type="number" max="10" step="1" value="1" >';
         H+='</div>'
+        H+='<div class="rightprocess">';
+        H+='<div class="option"><input checked type="checkbox" id="project" name="project"> <label for="project">Send to projector?</label></div>';
         H+='<input type="submit" class="btn submit" value="Make predictions" >';
+        H+='</div>';
         H+='</div>';
     
        
@@ -192,7 +220,11 @@ function build_view(o){
      H+='<form class="predoptions">';
      H+='<div class="list">';
      H+='</div>';
-    H+='<input type="submit" class="submit btn" value="Continue">';
+     H+='<div class="submitactions">';
+    H+='<input type="submit" class="submit btn" value="Next template">';
+
+    H+='<button class="sendtoprojector btn" >Send to projector</button>';
+    H+='</div>';
     H+='</form>';
     H+='</div>';
     console.log(H);
@@ -254,7 +286,15 @@ function getRes(res,type="radio") {
 }
 
 
+function sendtoprojector(){
+
+}
+
 //helpers
 function scrolltoBottom(){
     $('body,html').animate({ scrollTop: $('#main').height() }, 800);
+}
+
+function changeStatus(status){
+    $("#status").text(status);
 }

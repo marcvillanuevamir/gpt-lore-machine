@@ -69,19 +69,32 @@ function typeWriter() {
   }
 }
 
+function typewriterTheaterChunk(chunk){
+  $("#text .shine").removeClass("shine");
+  $("#text")[0].innerHTML += '<span class="shine">'+chunk+'</span>';
+  $("#texttype").stop();
+  $("#texttype").animate({ scrollTop:$("#texttype #text").height()}, 600);
+}
+
 function typeWriterChat(chunk) {
   $("#chat .shine").removeClass("shine");
   $("#conversation .text")[0].innerHTML += '<span class="shine">'+chunk+'</span>';
+  
 }
 
+
+eel.expose(getPredictionChunk);
+function getPredictionChunk(chunk) {
+  typewriterTheaterChunk(chunk);
+}
 
 eel.expose(preStartProjector);
 function preStartProjector(timest){
   window.blocksid=timest;
   document.getElementById("text").innerHTML ="";
-    $("#main").show();
-    window.playing=true;
-    startTheater();
+  $("#main").show();
+  window.playing=true;
+  startTheater();
 }
 
 eel.expose(endProjection);
@@ -225,74 +238,81 @@ function speak(text,voicename) {
 speak("Interface ready","Google US English");
 
 function startTheater(){
-/* Create a Tree.js script with planes rotating in space with the same image */
 
-let imgSrc='cercle.jpg';//'cringe.jpg';
+  //$("#main").fadeIn(1000);
+  $("#chat").removeClass("enabled");
 
-// Create a scene
-let scene = new THREE.Scene();
+  console.log("startTheater");
+  /* Create a Tree.js script with planes rotating in space with the same image */
 
+  let imgSrc='cercle.jpg';//'cringe.jpg';
 
-// Create a camera
-let camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-
-// Create a renderer
-let renderer = new THREE.WebGLRenderer({ antialias: true , alpha: true });
-renderer.setPixelRatio( window.devicePixelRatio );
-renderer.setSize(window.innerWidth, window.innerHeight);
-$("#three")[0].appendChild(renderer.domElement);
+  // Create a scene
+  let scene = new THREE.Scene();
 
 
-// Set up the objects
-let planeGeometry = new THREE.PlaneGeometry(1,1);
-//let planeMaterial = new THREE.MeshBasicMaterial({map:texture} );
-let basicmaterial= new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+  // Create a camera
+  let camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
 
-camera.position.z = 5;
-
-// Create a plane geometry
-let geometry = new THREE.PlaneGeometry(10, 10);
-
-// Create a material
-let material = new THREE.MeshBasicMaterial();
-
-// Create a plane
-let plane = new THREE.Mesh(geometry, material);
-
-// Load an image
-let loader = new THREE.TextureLoader();
-loader.load(imgSrc, (texture) => {
-    loader.needsUpdate = true;
-    // Set texture to material
-    material.map = texture;
-
-    let scaler=1.2;
-    // Update plane
-    let aspectRatio = texture.image.width / texture.image.height;
-    plane.scale.x = aspectRatio*scaler;
-    plane.scale.y = 1*scaler;
-    console.log("loaded");
-    // Add plane to the scene
-    scene.add(plane);
-});
+  // Create a renderer
+  let renderer = new THREE.WebGLRenderer({ antialias: true , alpha: true });
+  renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  $("#three")[0].appendChild(renderer.domElement);
 
 
+  // Set up the objects
+  let planeGeometry = new THREE.PlaneGeometry(1,1);
+  //let planeMaterial = new THREE.MeshBasicMaterial({map:texture} );
+  let basicmaterial= new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 
-// Rotate the planes, render loop
-function animate() {
+  camera.position.z = 5;
+
+  // Create a plane geometry
+  let geometry = new THREE.PlaneGeometry(10, 10);
+
+  // Create a material
+  let material = new THREE.MeshBasicMaterial();
+
+  // Create a plane
+  let plane = new THREE.Mesh(geometry, material);
+
+  // Load an image
+  let loader = new THREE.TextureLoader();
+  loader.load(imgSrc, (texture) => {
+      loader.needsUpdate = true;
+      // Set texture to material
+      material.map = texture;
+
+      let scaler=1.2;
+      // Update plane
+      let aspectRatio = texture.image.width / texture.image.height;
+      plane.scale.x = aspectRatio*scaler;
+      plane.scale.y = 1*scaler;
+      console.log("loaded");
+      // Add plane to the scene
+      scene.add(plane);
+  });
+
+
+
+  // Rotate the planes, render loop
+  function animate() {
     requestAnimationFrame( animate );
-  plane.rotation.z += 0.001;
-  //plane2.rotation.z -= 0.01;
-  //plane3.rotation.z += 0.01;
-  //mesh.rotation.x += 0.005;
-  renderer.render(scene, camera);
-  //requestAnimationFrame(animate);
-}
-setTimeout(function(){
-  $("#three").fadeIn(1000);
-}, 1000);
+    plane.rotation.z += 0.001;
+    //plane2.rotation.z -= 0.01;
+    //plane3.rotation.z += 0.01;
+    //mesh.rotation.x += 0.005;
+    renderer.render(scene, camera);
+    //requestAnimationFrame(animate);
+  }
+  setTimeout(function(){
+    console.log("three fadein");
+    $("#three").fadeIn(1000);
+  }, 1000);
 
-animate();
+  console.log("animate");
+  animate();
 
 }
 
@@ -300,6 +320,8 @@ animate();
 
 eel.expose(startchat);
 function startchat(){
+  endProjection();
+  $("#main").fadeIn(1000);
   $("#chat").addClass("enabled");
 }
 
