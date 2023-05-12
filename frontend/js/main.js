@@ -94,7 +94,6 @@ $( document ).ready(function() {
 async function load_template() {
     var t = await eel.get_template()();
         if (t) {
-            console.log(t);
             build_view(t);          
         } else {
            // alert("error");
@@ -111,9 +110,10 @@ async function send_template(data){
 }
 
 function build_view(o){
+    console.log(o);
     let H='';
     H+='<form class="textinputs">';
-    o.forEach(function(b) {
+    o.blocks.block.forEach(function(b) {
       
             console.log(b);
             H+='<div class="block">';
@@ -123,6 +123,14 @@ function build_view(o){
             if (b.type=="input"){
                 H+='<label>'+b.label+'</label>'
                 H+='<input id="'+b.id+'" name="'+b.id+'" >';
+            }
+            if (b.type=="textarea"){
+                H+='<label>'+b.label+'</label>';
+                let text="";
+                if (b.hasOwnProperty("value")) {
+                    text=b.value;
+                }
+                H+='<textarea id="'+b.id+'" name="'+b.id+'" >'+text+'</textarea>';
             }
             if (b.type=="transcription"){
                
@@ -152,7 +160,8 @@ function build_view(o){
     });
     if (o.hasOwnProperty("process")) {
     H+='<div class="process">';
-    if ("options"in o.process[0]){
+    if (o.process.hasOwnProperty("options")) {
+    //if ("options" in o.process[0]){
         H+='<div class="bigoptions">';
         H+='<select name="options">';
         H+='<option>Choose a template::::</option>';

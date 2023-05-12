@@ -1,3 +1,4 @@
+<root>
 <blocks>
     <block>
       <type>chat</type>
@@ -20,4 +21,28 @@ Talk in catalan
 
       </system>
     </block>
+
+    <block>
+      <type>p</type>
+      <text>Genera una historia a partir de la informació del usuari</text>
+    </block>
+    <block>
+      <type>textarea</type>
+      <label>LORE</label>
+      <value>
+Say hi in french
+      </value>
+      <id>lore</id>
+    </block>
+    
 </blocks>
+ <process>
+ <step>
+     <text>Hi...</text>
+ </step>
+ <step>
+      <input>lore</input>
+      <after>\n</after>
+    </step>
+ </process>
+</root>

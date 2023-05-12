@@ -10,18 +10,30 @@ import sys
 import xml.etree.ElementTree as ET
 
 #helpers
+def _convert_element_to_dict(elem):
+    obj = {}
+    for child in elem:
+        child_obj = _convert_element_to_dict(child)
+        value = child_obj if child_obj else child.text
+        if child.tag not in obj:
+            obj[child.tag] = value
+        else:
+            if not isinstance(obj[child.tag], list):
+                obj[child.tag] = [obj[child.tag]]
+            obj[child.tag].append(value)
+        
+    return obj
+
 def loadXMLtoObject(uri):
+  try:
     tree = ET.parse(uri)
     root = tree.getroot()
-    data = []
+    return _convert_element_to_dict(root)
+  except Exception as e:
+    print(f"Error loading XML file: {e}")
+    return None
 
-    for elem in root:
-        elem_dict = {}
-        for attr in elem:
-            elem_dict[attr.tag] = attr.text
-        data.append(elem_dict)
-
-    return data
+##############################################################
 
 if __name__=='__main__':
   multiprocessing.freeze_support()

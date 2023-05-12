@@ -122,6 +122,7 @@ class GPT:
     def genericProcess(self,structure,inputs):
         H=''
         for p in structure:
+            print("P",p)
             
             if "text" in p:
                 H+=p["text"]
@@ -134,19 +135,21 @@ class GPT:
                 H+=txt
                 if "after" in p:
                     H+=p["after"]
+        print("genericProcess",structure)
+        print("H",H)
         return H
 
     def processBlocks(self,template,inputs,candidates=1,eel=False):
        
         H=''
-
-        if "options" in template["process"][0]:
+  
+        if "options" in template["process"]:
             print("its an options one")
             selected=int(inputs["options"])
-            structure=template["process"][0]["options"][selected]["structure"]
+            structure=template["process"]["options"][selected]["structure"]
         else:
             print("its a classic template")
-            structure=template["process"]
+            structure=template["process"]["step"]
         print("")
         print("structure",structure)
         H+=self.genericProcess(structure,inputs)
