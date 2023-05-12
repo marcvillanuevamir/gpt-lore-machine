@@ -5,7 +5,7 @@ from pydub import AudioSegment
 import tempfile
 import configparser
 from lib.recorder import recorder
-
+from time import sleep
 
 
 class GPT:
@@ -75,12 +75,17 @@ class GPT:
                     #sys.stdout.flush()
                     pred+=answer["content"]
                     #print(answer["content"])
+
+                    #quick and dirty way to slow down writing speed
+                    #sleep(0.5)
             
                 #print(msg.choices[0].text)
                 #sys.stdout.write(chunk.choices[0]["delta"]["content"])
                 #sys.stdout.flush()
             else:
+                response=[]
                 chunkhandler("<STOP>")
+                break
         self.streaming=False
         return pred
      

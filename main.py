@@ -85,6 +85,10 @@ if __name__=='__main__':
       return data
 
   @eel.expose
+  def endchat():
+      eel.endchat()
+
+  @eel.expose
   def initProjector():
      timest=datetime.timestamp(datetime.now())
      eel.preStartProjector(timest)

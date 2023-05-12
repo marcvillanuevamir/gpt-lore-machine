@@ -10,6 +10,7 @@ function initVars(){
   window.voice="";
   window.speed = 50;
   document.getElementById("text").innerHTML ="";
+  window.streamedText="";
 }
 
 initVars();
@@ -47,11 +48,13 @@ function handleEndBlock(trigger){
 
 function typeWriter() {
   window.is_typing=true;
+  
   let screenH=$(window).height();
   if (window.i < window.txt.length) {
     $("#text .shine").removeClass("shine");
       let c=window.txt.charAt(window.i);
       document.getElementById("text").innerHTML += '<span class="shine">'+c+'</span>';
+      
       let newtextH=$("#text").height()+100;
       if (newtextH>=screenH){
         //next page
@@ -61,27 +64,66 @@ function typeWriter() {
       window.i++;
       window.last_text_H=newtextH;
       setTimeout(typeWriter, window.speed);
+     // $("#texttype").stop();
+     // $("#texttype").animate({ scrollTop:$("#texttype #text").height()}, 600);
+     //$("#texttype").scrollTop($("#texttype #text").height());
   } else {
     console.log("no more text in window.txt");
+    $("#text .shine").removeClass("shine");
     //end
     window.is_typing=false;
     handleEndBlock("typing");
   }
 }
 
+function animateStreamedText(){
+  window.is_typing=true;
+  if (window.i < window.streamedText.length) {
+    $("#text .shine").removeClass("shine");
+    let c= window.streamedText.charAt(window.i);
+    window.streamedText=window.streamedText.substring(1);
+    document.getElementById("text").innerHTML += '<span class="shine">'+c+'</span>';
+    setTimeout(animateStreamedText, window.speed);
+  } else {
+    //end writing text
+    window.is_typing=false;
+  }
+ 
+}
+
 function typewriterTheaterChunk(chunk){
-  $("#text .shine").removeClass("shine");
-  $("#text")[0].innerHTML += '<span class="shine">'+chunk+'</span>';
-  $("#texttype").stop();
-  $("#texttype").animate({ scrollTop:$("#texttype #text").height()}, 600);
+  //gets chunks from chat2 in story writing mode
+  if (chunk=="<STOP>"){
+    //end of stream
+    $("#text .shine").removeClass("shine");
+  } else {
+    window.streamedText+=chunk;
+    animateStreamedText();
+    $("#texttype").stop();
+     $("#texttype").animate({ scrollTop:$("#texttype #text").height()}, 600);
+  }
 }
 
 function typeWriterChat(chunk) {
+  //gets chunks from chat2 in chat mode
   $("#chat .shine").removeClass("shine");
   $("#conversation .text")[0].innerHTML += '<span class="shine">'+chunk+'</span>';
-  
 }
 
+
+eel.expose(recieveChatStream);
+function recieveChatStream(chunk){
+  if (chunk=="<STOP>"){
+    //end of stream 
+    $("#chat .shine").removeClass("shine");
+  
+  } else {
+    //new chunk
+    typeWriterChat(chunk);
+  }
+  $("#conversation").stop();
+  $("#conversation").animate({ scrollTop:$("#conversation .text").height()}, 600);
+}
 
 eel.expose(getPredictionChunk);
 function getPredictionChunk(chunk) {
@@ -105,7 +147,8 @@ function endProjection(){
   speechSynthesis.cancel();
   initVars();
   let speed=1000;
-  $("#three,#main").fadeOut(speed);
+  $("#three").fadeOut(speed);
+ 
   /*
   setTimeout(function(){
     document.getElementById("text").innerHTML="";
@@ -321,32 +364,20 @@ function startTheater(){
 eel.expose(startchat);
 function startchat(){
   endProjection();
-  $("#main").fadeIn(1000);
+  $("#conversation .text").text("");
+  $("#main").show();
   $("#chat").addClass("enabled");
+  $("#prompt").removeClass("disabled");
+ 
 }
 
 eel.expose(endchat);
 function endchat(){
   $("#prompt").addClass("disabled");
   setTimeout(function(){ $("#chat").removeClass("enabled"); }, 5000);
-  
 }
  
 
-eel.expose(recieveChatStream);
-function recieveChatStream(chunk){
-  if (chunk=="<STOP>"){
-    //end of stream 
-    $("#chat .shine").removeClass("shine");
-  
-  } else {
-    //new chunk
-    typeWriterChat(chunk);
-  }
-  $("#conversation").stop();
-  $("#conversation").animate({ scrollTop:$("#conversation .text").height()}, 600);
- 
-}
 
 
 $("#prompt").on("keydown", function (event) {

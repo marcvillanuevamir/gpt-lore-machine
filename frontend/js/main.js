@@ -5,7 +5,11 @@ $( document ).ready(function() {
 
     $("#statusbar").on("click",".cancelprojection",function(e){
         e.preventDefault();
-        eel.endProjection();
+        if (getStatus()=="CHAT"){
+            eel.endchat();
+        } else{
+            eel.endProjection();
+        }
         changeStatus("IDDLE");
     });
 
@@ -49,6 +53,12 @@ $( document ).ready(function() {
         scrolltoBottom();
     });
 
+    $("#main ").on('change', '.frontendselect',function() {
+        let text=this.value;
+        if (text.length>0){
+            $(this).closest(".block").find("textarea").val(text);
+        }
+    });
 
     //chat
     $("#main ").on("click",".startchat",function(e){
@@ -116,7 +126,8 @@ async function load_template() {
 
 
 function send_template(data){
-
+    eel.endchat();
+    setTimeout(function(){
     eel.initProjector()
     setTimeout(function(){
         //async function send_template(data){
@@ -131,6 +142,8 @@ function send_template(data){
         }
         */
     }, 1000);
+}, 1000);
+
 }
 
 function build_view(o){
@@ -179,6 +192,20 @@ function build_view(o){
                 H+='<button class="btn startchat">Start</button>';
                 H+='</div>';
             }
+            if(b.option){
+                H+='<select class="frontendselect">';
+                H+='<option value="">Select a template</option>';
+                id="";
+                b.option.forEach(function(o) {
+                   H+='<option value="'+o.value+'">'+o.title+'</option>';
+                   id=o.id;
+                });
+                H+='</select>';
+                H+='<br><br>';
+                H+='<textarea id="'+id+'" name="'+id+'" ></textarea>';
+            }
+
+
             H+='</div>';
      
     });
@@ -297,4 +324,7 @@ function scrolltoBottom(){
 
 function changeStatus(status){
     $("#status").text(status);
+}
+function getStatus(){
+    return $("#status").text();
 }
