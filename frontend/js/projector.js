@@ -50,11 +50,7 @@ function typeWriter() {
   let screenH=$(window).height();
   if (window.i < window.txt.length) {
     $("#text .shine").removeClass("shine");
-    //document.getElementById("text").innerHTML=$("#text").text();
       let c=window.txt.charAt(window.i);
-      //if (c=="."){
-      //  c=".<br>"; 
-      //}
       document.getElementById("text").innerHTML += '<span class="shine">'+c+'</span>';
       let newtextH=$("#text").height()+100;
       if (newtextH>=screenH){
@@ -72,6 +68,12 @@ function typeWriter() {
     handleEndBlock("typing");
   }
 }
+
+function typeWriterChat(chunk) {
+  $("#chat .shine").removeClass("shine");
+  $("#conversation .text")[0].innerHTML += '<span class="shine">'+chunk+'</span>';
+}
+
 
 eel.expose(preStartProjector);
 function preStartProjector(timest){
@@ -122,18 +124,6 @@ function addtext(data,i,id){
     } 
   }
 }
-
-/*
-eel.expose(showtext);
-function showtext(data){
-    speak(data["en"],data["voice"]);
-    window.i = 0;
-    window.txt = data["cat"];
-    
-    document.getElementById("text").innerHTML="";
-    typeWriter();
-}
-*/
 
 if ('speechSynthesis' in window) {
     // Speech Synthesis supported 🎉
@@ -306,4 +296,47 @@ animate();
 
 }
 
+///CHAT functions
 
+eel.expose(startchat);
+function startchat(){
+  $("#chat").addClass("enabled");
+}
+
+eel.expose(endchat);
+function endchat(){
+  $("#prompt").addClass("disabled");
+  setTimeout(function(){ $("#chat").removeClass("enabled"); }, 5000);
+  
+}
+ 
+
+eel.expose(recieveChatStream);
+function recieveChatStream(chunk){
+  if (chunk=="<STOP>"){
+    //end of stream 
+    $("#chat .shine").removeClass("shine");
+  
+  } else {
+    //new chunk
+    typeWriterChat(chunk);
+  }
+  $("#conversation").stop();
+  $("#conversation").animate({ scrollTop:$("#conversation .text").height()}, 600);
+ 
+}
+
+
+$("#prompt").on("keydown", function (event) {
+  if (event.key === "Enter") {
+    const text = $(this).val();
+    if (text) {
+      //window.chathistory.push({"role":"user","content":text});
+      //eel.sendprompt(window.chathistory,window.chatsystem,window.chatengine);
+      eel.sendprompt(text);
+      
+      $("#conversation .text").text("")
+      $(this).val("");
+    }
+  }
+});

@@ -41,9 +41,9 @@ class GPT:
         r_text=r["choices"][0]["text"]
         return r_text.strip()
     
-    def chat(self,prompt,temperature=0.9,max_tokens=7):
+    def chat(self,prompt,model="gpt-3.5-turbo",temperature=0.9,max_tokens=7):
         self.lastprompts=[]
-        completion = openai.ChatCompletion.create(model="gpt-4", messages=self.constructMessages(prompt))
+        completion = openai.ChatCompletion.create(model=model, messages=self.constructMessages(prompt))
         pred=completion.choices[0].message.content
         
         #save response to lastptompts
@@ -51,6 +51,40 @@ class GPT:
         #self.lastprompts.append({"role": "assistant", "content":pred,"time":now_timestamp})
         
         return pred
+    
+    def chat2(self,chunkhandler,chats,system,model="gpt-3.5-turbo",temperature=0.9,max_tokens=260):
+        
+        
+        messages=[{"role":"system","content":system}]
+
+        for m in chats:
+            messages.append(m)
+
+        print("messages",messages)
+        
+        
+        response= openai.ChatCompletion.create(model=model, messages= messages,temperature=temperature, stream=True)
+
+        for chunk in response:
+            
+            answer=chunk["choices"][0]["delta"]
+            if chunk["choices"][0]["finish_reason"]=="stop":
+                #end of response
+                print("ENDDD:::::::::::::::")
+                chunkhandler("<STOP>")
+            if "content" in answer:
+                chunkhandler(answer["content"])
+                sys.stdout.write(answer["content"])
+                sys.stdout.flush()
+                #print(answer["content"])
+          
+            #print(msg.choices[0].text)
+            #sys.stdout.write(chunk.choices[0]["delta"]["content"])
+            #sys.stdout.flush()
+        
+        #return True
+     
+           
     
     def constructMessages(self,prompt):
 

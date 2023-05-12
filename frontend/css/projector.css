@@ -2,7 +2,7 @@ body{
     margin:0px;
     overflow: hidden;
      background-color: #050C1F;
-   
+     font-family: 'IBM Plex Mono', monospace;
 }
 
 #texttype{
@@ -15,7 +15,7 @@ body{
     font-size: 67px;
     /*font-weight: 900;*/
    /* font-family: 'Source Code Pro', monospace;*/
-    font-family: 'IBM Plex Mono', monospace;
+   
     letter-spacing: -2px;
 }
 #three{
@@ -30,4 +30,54 @@ canvas{
     overflow:visible;
     color: #FFFFFF;
 text-shadow: #FFF 0px 0px 5px, #FFF 0px 0px 10px, #FFF 0px 0px 15px, #FF2D95 0px 0px 20px, #FF2D95 0px 0px 30px, #FF2D95 0px 0px 40px, #FF2D95 0px 0px 50px, #FF2D95 0px 0px 75px;
+}
+#chat{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transition: opacity 3s;
+    position: absolute;
+    width: 100%;
+}
+#chat.enabled{
+    opacity: 1;
+}
+
+#prompt{
+    font-size: 10vh;
+    background: transparent;
+    border: solid 2px white;
+    border-radius: 102px;
+    padding: 0.5% 3%;
+    margin-bottom: 2%;
+    margin-left: 2%;
+    margin-right: 2%;
+    color: white;
+   
+
+    transition: bottom 1s;
+    bottom: 0px;
+    position: absolute;
+    /* bottom: 0px; */
+    width: calc(100% - 188px);
+}
+#conversation{
+    flex: 1;
+    color: white;
+    font-size: 8vh;
+    letter-spacing: -0.8px;
+    line-height: 9vh;
+    padding: 20px;
+    max-height: calc(73vh);
+    margin-bottom: 5vh;
+    overflow-y: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+#conversation::-webkit-scrollbar{
+    display: none;
+}
+#prompt.disabled{
+    bottom:-25vh;
 }

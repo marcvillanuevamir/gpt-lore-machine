@@ -37,6 +37,17 @@ $( document ).ready(function() {
         scrolltoBottom();
     });
 
+
+    //chat
+    $("#main ").on("click",".startchat",function(e){
+        e.preventDefault();
+        let system=$(".chatsystem").val();
+        let engine=$(".chatengine").val();
+        eel.startChat(system,engine);
+    });
+
+
+    //transcriber
     
     $("#main ").on("click",".startprojector",function(e){
         e.preventDefault();
@@ -83,6 +94,7 @@ $( document ).ready(function() {
 async function load_template() {
     var t = await eel.get_template()();
         if (t) {
+            console.log(t);
             build_view(t);          
         } else {
            // alert("error");
@@ -101,7 +113,7 @@ async function send_template(data){
 function build_view(o){
     let H='';
     H+='<form class="textinputs">';
-    o.blocks.forEach(function(b) {
+    o.forEach(function(b) {
       
             console.log(b);
             H+='<div class="block">';
@@ -125,10 +137,20 @@ function build_view(o){
                 
                 H+='</div>';
             }
+
+            if (b.type=="chat"){
+                H+='<h4>'+b.label+'</h4>'
+                H+='<label>System</label>';
+                H+='<textarea class="chatsystem">'+b.system+'</textarea>';
+                H+='<input type="hidden" class="chatengine" value="'+b.engine+'" >';
+                H+='<div class="actions">';
+                H+='<button class="btn startchat">Start</button>';
+                H+='</div>';
+            }
             H+='</div>';
      
     });
-    
+    if (o.hasOwnProperty("process")) {
     H+='<div class="process">';
     if ("options"in o.process[0]){
         H+='<div class="bigoptions">';
@@ -152,7 +174,9 @@ function build_view(o){
     
        
     }
+
     H+='</div>';
+}
     H+='</form>';
     H+='<div class="responses" style="display:none">';
     // H+='<h2>Options</h2>'
