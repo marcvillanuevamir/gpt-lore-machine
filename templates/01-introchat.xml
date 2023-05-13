@@ -29,29 +29,62 @@ Talk in catalan
       <text>Genera una historia a partir de la informació del usuari, escull template:</text>
     </block>
     <block>
-    <option>
-    <title>Cancel Enric</title>
-      <type>textarea</type>
-      <label>LORE</label>
-      <value>
-Write a list of tweets of people wanting to cancel Enric Puig, the director of Santa Mònica art center in Barcelona based on the worries of this person:
 
-The worry: 
+      <option>
+    <title>Game theory</title>
+    <type>textarea</type>
+    <label>LORE</label>
+    <value>
+Write a continuous line of events that continue to evolve and complicate things based on game theory on the different agents involved in the art comunity and the city on one possible change.
+These line of events bring to some key changes in the context with tragic events and these speculations should mention what would happen if some of the agents would react in a certain way or the other, and the possible outcomes in each way.
+
+The context is:
+- Barcelona's Santa Mònica art center. 
+- It's director Enric Puig, a catalan philosopher interested in digital media and focusing on the processes of art creation rather than the finished piece of art, involving as many local agents as possible.
+- Current exhibition is called Utopia Rambles.
+- There's local elecctions comming in 2 weeks.
+- Tonight it's a special event called Night of the museums, where all museums and art centers in the city are opened during the night.
+
+Also, to add some subtle randomness to the ponderation, the line events are also conditioned by the interpretation a tarotist would make if a card would be drawn to predict future events:
+
+The change: Santa mònica wants to make live music shows everyday.
+
+the card: The death
+
+Don't mention game theory nor tarot specifically.
+
 
 write it in catalan
-      </value>
-      <id>lore</id>
-      </option>
+    
+    </value>
+    <id>lore</id>
+    </option>
 
-        <option>
-        <title>japanese hi</title>
-      <type>textarea</type>
-      <label>LORE</label>
-      <value>
-Translate Hi to japanese
-      </value>
-      <id>lore</id>
-      </option>
+
+    <option>
+    <title>Titols per utopia rambles</title>
+    <type>textarea</type>
+    <label>LORE</label>
+    <value>
+Based on this context:
+- Barcelona's Santa Mònica art center. 
+- It's director Enric Puig, a catalan philosopher interested in digital media and focusing on the processes of art creation rather than the finished piece of art, involving as many local agents as possible.
+- Current exhibition is called Utopia Rambles.
+
+Write a list of variations of the current exhibition title and maybe a subtitle based on these proposed strategy changes, make them all terrible ideas:
+
+The proposed changes:
+- More music
+- More international artists
+
+write it in catalan and only the list with no further comments.
+    
+    </value>
+    <id>lore</id>
+    </option>
+
+
+
     </block>
     
 </blocks>

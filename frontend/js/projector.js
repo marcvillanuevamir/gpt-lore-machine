@@ -80,7 +80,12 @@ function animateStreamedText(){
   window.is_typing=true;
   if (window.i < window.streamedText.length) {
     $("#text .shine").removeClass("shine");
+    if (window.streamedText.substring(0, 2) === "\n") {
+      //if ((c==='\\') && (window.streamedText.charAt(window.i+1)=== 'n')){
+        document.getElementById("text").innerHTML +='<br>';
+      }
     let c= window.streamedText.charAt(window.i);
+    
     window.streamedText=window.streamedText.substring(1);
     document.getElementById("text").innerHTML += '<span class="shine">'+c+'</span>';
     setTimeout(animateStreamedText, window.speed);
@@ -97,15 +102,18 @@ function typewriterTheaterChunk(chunk){
     //end of stream
     $("#text .shine").removeClass("shine");
   } else {
+    
     window.streamedText+=chunk;
     animateStreamedText();
     $("#texttype").stop();
      $("#texttype").animate({ scrollTop:$("#texttype #text").height()}, 600);
+
   }
 }
 
 function typeWriterChat(chunk) {
   //gets chunks from chat2 in chat mode
+ 
   $("#chat .shine").removeClass("shine");
   $("#conversation .text")[0].innerHTML += '<span class="shine">'+chunk+'</span>';
 }
