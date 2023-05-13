@@ -113,7 +113,7 @@ function typewriterTheaterChunk(chunk){
 
 function typeWriterChat(chunk) {
   //gets chunks from chat2 in chat mode
- 
+  speak(chunk,"Google português do Brasil");
   $("#chat .shine").removeClass("shine");
   $("#conversation .text")[0].innerHTML += '<span class="shine">'+chunk+'</span>';
 }
@@ -197,6 +197,9 @@ if ('speechSynthesis' in window) {
    }
 
 function speak(text,voicename) {
+  
+  console.log(voicename);
+  //Google português do Brasil
   window.is_speaking=true;
     var CHARACTER_LIMIT = 200;
       //Support for multipart text (there is a limit on characters)

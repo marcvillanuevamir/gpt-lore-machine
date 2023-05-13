@@ -30,6 +30,35 @@ Talk in catalan
     </block>
     <block>
 
+
+<option>
+    <title>Lore GENERAL</title>
+    <type>textarea</type>
+    <label>LORE</label>
+    <value>
+Name of the institution: Santa Mònica
+Kind of institution: Museum for contemporary arts
+Location: Barceona, city center
+Current year: 2023
+Nearest landmarks: The sea, the beach, Columbus statue, Rambles, lots of international people, tourists, living statues, Golondrinas (ships for tourists), drug traffic, Liceu (opera house), subway.
+History: Santa Mònica depends directly on the Culture Department of the Catalan Government. It has been often felt as useless by the public. It has also known better times. Since the last two years, the new director Enric Puig has decided to introduce major changes in how the museum works. Far from being finished, the centre is constantly reinventing itself, in constant transformation. From 1988 to 2002 (Director Josep Miquel Garcia), the centre aimed to become a museum for contemporary Catalan art, rivaling with MACBA. From 2003 to 2008 (Director Ferran Barenblit), Barenblit's project insisted on contemporary artistic production but he was fired by the Catalan minister of culture, who found that the centre was not atracting enough visitors. From 2009 to 2013 (Director Vicenç Altaió), Santa Mònica aimed to become a hub for science, art and communication, but its funding was drastically cut, so the project could never be fully developed. From 2013 to 2017 (Directors Conxita Oliver, Bibiana Ballbè, Didac Lee, etc) there was a moment of political confusion and loss of direction, during which the centre showcased all sorts of incoherent projects. In 2021 the new director Enric Puig arrived at Santa Mònica. Enric is a philosopher, expert in contemporary digital arts and culture. He has experience as director of another well-known art centre, La Escocesa. He is currently introducing major changes, and started by demolishing the inner walls of the building: trying to make the centre into one single space.
+Some artists that have worked at Santa Mònica: Joseph Beuys, Mario Santamaria, Agustín Ortiz, Greta Alfaro, Robert Llimós, Hogar Diska, Recetas urbanas, TAKK, etc. 
+Some Mòniques: Clara Piazuelo, Carlos Carbonell, Irena Visa, Marta Sesé, Antonis Antoniou, Natalia Carminati, Sonia Villar, Ana Solanilla…
+Major problems: The working team is small and usually is overworked. Not everyone shares Enric Puig's ideas of how the museum should to be. Some workers secretly criticize and blame Enric for the changes he is introducing and the lack of organization. Attendance is still significantly low. The public don't understand what Santa Mònica is currently about. There is some confusion and the communication of public events is not optimal. The Government has to accept every idea from Enric and there is the risk that they withdraw their funding or support to the project.
+How Enric describes what Santa Mònica is about: an interdisciplinary arts centre dedicated to promoting contemporary creation. The centre starts from the premise that culture is not something static, that it is neither useless nor contemplative, but rather something capable of acting, to connect our stories with various appropriable futures and to open up new questions for us. Culture is conceived, moreover, not as a body that comes finished from the outside, but as a process in constant mutation. Today more than ever, we are all builders in real time. Art is the tool at hand that we use every day, inventing new sounds and words, static and moving images, to investigate and experiment with new cultural forms. Art opens up new imaginations capable of giving us meaning in a world full of uncertainties. In this cultural scenario, Santa Mònica aims to become a space in constant construction of new shared meanings.
+How Santa Mònica works: Santa Mònica periodically invites a group of artists from different fields to work collectively on creative projects. At the same time, the Mòniques, hybrid groups formed by public call, experiment with the same institutional infrastructures from their artistic practices as an additional part of the programming. In total, more than forty artists take part every four months in a process of shared construction, grouped under a theme that also takes shape collectively. Entry is free for all exhibitions and events.
+Space of the museum: The building that hosts the centre is a 1626 Renaissance convent that became a monument of national interest in 1984. The cloister acts as a community resource, in which artists and curatorial teams work collectively in exercises of liquid authorship. These exercises are resolved in exhibitions and experiential and participatory actions, open to the creativity of citizens through multiple mediations in the centre, in the street and online.
+Participation: The derived exhibitions and actions, therefore, are not anticipated as preconceived and pre-planned programming, but are understood as the results of multiple processes of genuine research, in which error and indeterminacy are always integrated. At Santa Mònica, everything that happens is going through a first phase of research and experimentation subject to the variations, rectifications and errors inherent to open processes. The results –exhibitions, actions and their corresponding multiple mediations– are focused on provoking, in a second phase, several artistic processes aimed at citizen participation that lead us to open up new meanings. Through this exercise of institutional unhierarchy, the new Santa Mònica embraces a methodology that encourages diverse formulas of horizontal participation.
+Current situation: Enric Puig has agreed to let an AI design the centre's future exhibition. Although this is not a truly original idea, it is quite a breakthrough for the institution. The goal is to raise awareness about the potential of AI tools to produce critical discourse on arts, culture and participation. In order to do that, a group of people is making collective decisions in order to guess what this exhibition might look like and how it would transform the centre.
+
+
+
+Write it in catalan
+
+  </value>
+    <id>lore</id>
+    </option>
+
       <option>
     <title>Game theory</title>
     <type>textarea</type>
@@ -82,6 +111,9 @@ write it in catalan and only the list with no further comments.
     </value>
     <id>lore</id>
     </option>
+
+
+  
 
 
 

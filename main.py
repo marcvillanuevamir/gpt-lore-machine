@@ -178,8 +178,13 @@ if __name__=='__main__':
       chathistory.append({"role":"assistant","content":assistant_response})
       assistant_response=""
     else:
+      #sayp = Thread( target= say, args=(chunk,) )
+      #sayp.start()
       assistant_response+=chunk
     eel.recieveChatStream(chunk)
+
+  def say(text):
+     os.system('mshta vbscript:Execute("CreateObject(""SAPI.SpVoice"").Speak(""'+text+'"")(window.close)")')
 
   @eel.expose
   def startChat(system,engine):
