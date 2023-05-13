@@ -30,7 +30,12 @@ body,input{
     padding: 20px;
 }
 .block{
-    margin-bottom: 20px;;
+
+    
+    border-bottom: dotted;
+    padding-bottom: 24px;
+    margin-bottom: 44px;
+
 }
 .process{
     display: flex;
@@ -82,7 +87,7 @@ input,textarea,select,.livetranscribe{
 }
 textarea{
     font-size: 15px;
-    min-height: 70vh;
+    min-height: 400px;
 
 }
 
@@ -143,7 +148,7 @@ background-color: red;
     margin-bottom: 8px;
 }
 .submit{
-    margin-top: 10px;
+ 
 }
 #templatename{
     color: green;
@@ -199,4 +204,48 @@ background-color: red;
 #options select{
     width: 100%;
     font-size: 16px;
+}
+.chatsystem{
+    min-height: 420px;
+    margin-bottom: 20px;
+}
+.submitactions{
+    display: flex;
+    justify-content: space-between;
+}
+.process .option{
+    text-align: center;
+    margin-right: 20px;
+    width: 80px;
+}
+.process .option input[type="checkbox"]{
+    width: 80px;
+    height: 29px;
+}
+.process .rightprocess{
+    display: flex;
+}
+#statusbar{
+    background-color: black;
+    color: white;
+    position: fixed;
+    width: 100%;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#status{
+    background-color: white;
+    display: inline-block;
+    color: black;
+    padding: 2px 10px;
+    border-radius: 5px;
+}
+#statusbar .btn{
+    font-size: 14px;
+    padding: 5px 15px;
+}
+#statusbar .actions{
+    padding-right: 20px;
 }

@@ -1,0 +1,65 @@
+  <blocks>
+    <block>
+      <type>transcription</type>
+      <label>Transcription</label>
+      <id>transcription</id>
+    </block>
+  </blocks>
+  <process>
+    <option>
+      <title>01 - cours pour des étudiants de Master en Arts</title>
+      <structure>
+        <text>transforme ce texte en cours pour des étudiants de Master en Arts :</text>
+        <input>transcription</input>
+        <after></after>
+      </structure>
+    </option>
+    <option>
+      <title>02 - article universitaire</title>
+      <structure>
+        <text>transforme ce texte en article universitaire :</text>
+        <input>transcription</input>
+        <after></after>
+      </structure>
+    </option>
+    <option>
+      <title>03 - 8 ans</title>
+      <structure>
+        <text>transforme ce texte en texte pour enfant de 8 ans :</text>
+        <input>transcription</input>
+        <after></after>
+      </structure>
+    </option>
+    <option>
+      <title>04 circulaire administrative</title>
+      <structure>
+        <text>transforme ce texte en circulaire administrative:</text>
+        <input>transcription</input>
+        <after></after>
+      </structure>
+    </option>
+    <option>
+      <title>05 - chanson</title>
+      <structure>
+        <text>transforme ce texte en chanson :</text>
+        <input>transcription</input>
+        <after></after>
+      </structure>
+    </option>
+    <option>
+      <title>chant d’oiseaux</title>
+      <structure>
+        <text>transforme ce texte en chant d’oiseaux:</text>
+        <input>transcription</input>
+        <after></after>
+      </structure>
+    </option>
+    <option>
+      <title>animaux</title>
+      <structure>
+        <text>transforme ce texte en nouvelle pour les animaux:</text>
+        <input>transcription</input>
+        <after></after>
+      </structure>
+    </option>
+  </process>

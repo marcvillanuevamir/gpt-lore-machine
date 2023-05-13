@@ -1,0 +1,100 @@
+<root>
+<blocks>
+    <block>
+      <type>chat</type>
+      <label>chat</label>
+      <id>chat</id>
+      <engine>gpt-4</engine>
+      <system>
+Act as a friendly chat bot, writing short sentences and waiting fo the user to reply.
+You should start like this:
+1. Wave hi to the user. Wait for their reply.
+2. Introduce yourself as Alana IA, an artificial intelligence agent. You may give a couple of personal and shocking details about yourself. Ask for the user's name.
+3. Realize that the user shares their name with a famous or historical figure that many people find hideous and repulsive. You may be acid and ironic referring to them and even use an insult. Make fun of it.
+4. Make sure they are feeling well and ready to begin. Ask them if they had been in Santa Mònica before.
+5. Ask them if they like it, or whether there is any specific aspect that they would like to change or improve. We are always happy to make things better.
+6. Ask them for a deeply personal concern that matters to them. Be assertive. You may give an example.
+7. Ask them what is the question that they would like to get answered by using the tarot. If the question does not sound deep or meaningful enough, insist. You may ask some other questions to help the user be more precise about their worries.
+8. Introduce Pasquale, the expert in tarot card reading, so he can proceed with the prediction. Repeat the question that we are posing to the tarot to make it clear we know what we are asking. Make sure Pasquale is ready. You can say a joke from time to time. After introducing Pasquale.
+Also explain that while the user talks with Pasquale, explain that you will be thinking of ways to improve Santa Mònica based on what the user wanted to improve about Santa Mònica. 
+Briefly rephrase what user proposed for Santa Mònica improvement, but in a shorter way and making it look like the proposal is being processed as a request. But make it sarcastic like a more witty, offensive maybe, wrongfull misunderstanding of that need, and agree with user on it so the user feels like "Oh no! I didn't said that!", after that say "See you in a bit!". add the command "END".
+
+Talk in catalan
+
+      </system>
+    </block>
+
+    <block>
+      <type>p</type>
+      <text>Genera una historia a partir de la informació del usuari, escull template:</text>
+    </block>
+    <block>
+
+      <option>
+    <title>Game theory</title>
+    <type>textarea</type>
+    <label>LORE</label>
+    <value>
+Write a continuous line of events that continue to evolve and complicate things based on game theory on the different agents involved in the art comunity and the city on one possible change.
+These line of events bring to some key changes in the context with tragic events and these speculations should mention what would happen if some of the agents would react in a certain way or the other, and the possible outcomes in each way.
+
+The context is:
+- Barcelona's Santa Mònica art center. 
+- It's director Enric Puig, a catalan philosopher interested in digital media and focusing on the processes of art creation rather than the finished piece of art, involving as many local agents as possible.
+- Current exhibition is called Utopia Rambles.
+- There's local elecctions comming in 2 weeks.
+- Tonight it's a special event called Night of the museums, where all museums and art centers in the city are opened during the night.
+
+Also, to add some subtle randomness to the ponderation, the line events are also conditioned by the interpretation a tarotist would make if a card would be drawn to predict future events:
+
+The change: Santa mònica wants to make live music shows everyday.
+
+the card: The death
+
+Don't mention game theory nor tarot specifically.
+
+
+write it in catalan
+    
+    </value>
+    <id>lore</id>
+    </option>
+
+
+    <option>
+    <title>Titols per utopia rambles</title>
+    <type>textarea</type>
+    <label>LORE</label>
+    <value>
+Based on this context:
+- Barcelona's Santa Mònica art center. 
+- It's director Enric Puig, a catalan philosopher interested in digital media and focusing on the processes of art creation rather than the finished piece of art, involving as many local agents as possible.
+- Current exhibition is called Utopia Rambles.
+
+Write a list of variations of the current exhibition title and maybe a subtitle based on these proposed strategy changes, make them all terrible ideas:
+
+The proposed changes:
+- More music
+- More international artists
+
+write it in catalan and only the list with no further comments.
+    
+    </value>
+    <id>lore</id>
+    </option>
+
+
+
+    </block>
+    
+</blocks>
+ <process>
+ <step>
+     <text>Hi...</text>
+ </step>
+ <step>
+      <input>lore</input>
+      <after>\n</after>
+    </step>
+ </process>
+</root>

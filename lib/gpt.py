@@ -5,12 +5,13 @@ from pydub import AudioSegment
 import tempfile
 import configparser
 from lib.recorder import recorder
-
+from time import sleep
 
 
 class GPT:
     
     model="text-davinci-003"
+    streaming=False #serves as an interruptor for stream methods
    
     def __init__(self):
         # determine if application is a script file or frozen exe
@@ -41,9 +42,9 @@ class GPT:
         r_text=r["choices"][0]["text"]
         return r_text.strip()
     
-    def chat(self,prompt,temperature=0.9,max_tokens=7):
+    def chat(self,prompt,model="gpt-3.5-turbo",temperature=0.9,max_tokens=7):
         self.lastprompts=[]
-        completion = openai.ChatCompletion.create(model="gpt-4", messages=self.constructMessages(prompt))
+        completion = openai.ChatCompletion.create(model=model, messages=self.constructMessages(prompt))
         pred=completion.choices[0].message.content
         
         #save response to lastptompts
@@ -51,6 +52,44 @@ class GPT:
         #self.lastprompts.append({"role": "assistant", "content":pred,"time":now_timestamp})
         
         return pred
+    
+    def chat2(self,chunkhandler,chats,system,model="gpt-3.5-turbo",temperature=0.9,max_tokens=260):
+        self.streaming=True
+        messages=[{"role":"system","content":system}]
+        for m in chats:
+            messages.append(m)
+        print("messages",messages)
+        
+        response= openai.ChatCompletion.create(model=model, messages= messages,temperature=temperature, stream=True)
+        pred=""
+        for chunk in response:
+            if self.streaming:
+                answer=chunk["choices"][0]["delta"]
+                if chunk["choices"][0]["finish_reason"]=="stop":
+                    #end of response
+                    print("ENDDD:::::::::::::::")
+                    chunkhandler("<STOP>")
+                if "content" in answer:
+                    chunkhandler(answer["content"])
+                    #sys.stdout.write(answer["content"])
+                    #sys.stdout.flush()
+                    pred+=answer["content"]
+                    #print(answer["content"])
+
+                    #quick and dirty way to slow down writing speed
+                    #sleep(0.5)
+            
+                #print(msg.choices[0].text)
+                #sys.stdout.write(chunk.choices[0]["delta"]["content"])
+                #sys.stdout.flush()
+            else:
+                response=[]
+                chunkhandler("<STOP>")
+                break
+        self.streaming=False
+        return pred
+     
+           
     
     def constructMessages(self,prompt):
 
@@ -88,6 +127,7 @@ class GPT:
     def genericProcess(self,structure,inputs):
         H=''
         for p in structure:
+            print("P",p)
             
             if "text" in p:
                 H+=p["text"]
@@ -100,19 +140,21 @@ class GPT:
                 H+=txt
                 if "after" in p:
                     H+=p["after"]
+        print("genericProcess",structure)
+        print("H",H)
         return H
 
-    def processBlocks(self,template,inputs,candidates=1,eel=False):
-       
-        H=''
+    def processBlocks(self,template,inputs,candidates=1,eel=False,project=False,stream=False):
 
-        if "options" in template["process"][0]:
+        H=''
+  
+        if "options" in template["process"]:
             print("its an options one")
             selected=int(inputs["options"])
-            structure=template["process"][0]["options"][selected]["structure"]
+            structure=template["process"]["options"][selected]["structure"]
         else:
             print("its a classic template")
-            structure=template["process"]
+            structure=template["process"]["step"]
         print("")
         print("structure",structure)
         H+=self.genericProcess(structure,inputs)
@@ -130,7 +172,12 @@ class GPT:
             print("")
             print("GPT COMPLETE::::")
             print(":::::::::::::::")
-            pred=self.chat(H,temperature=temp,max_tokens=200)
+            if stream:
+                chats=[{"role":"user","content":H}]
+                system=""
+                pred=self.chat2(eel.getPredictionChunk,chats,system,model="gpt-4",temperature=0.9,max_tokens=1200)
+            else:   
+                pred=self.chat(H,temperature=temp,max_tokens=200)
             #pred=self.complete(H,temperature=temp,max_tokens=200)
             #r=self.translate(pred,"en","ca")
             r=pred

@@ -3,6 +3,16 @@ $( document ).ready(function() {
     load_template();
     window.hasprojector=false;
 
+    $("#statusbar").on("click",".cancelprojection",function(e){
+        e.preventDefault();
+        if (getStatus()=="CHAT"){
+            eel.endchat();
+        } else{
+            eel.endProjection();
+        }
+        changeStatus("IDDLE");
+    });
+
     $("#main ").on("click",".textinputs .submit",function(e){
         e.preventDefault();
         let data={};
@@ -21,6 +31,12 @@ $( document ).ready(function() {
            
          });  
 
+         data["projectprediction"]=$("#project").val();
+
+         if (data["projectprediction"]=="on"){
+            changeStatus("GENERATION STREAM");
+         }
+
          $("#loader").show();
          console.log(data);
          send_template(data);
@@ -37,6 +53,24 @@ $( document ).ready(function() {
         scrolltoBottom();
     });
 
+    $("#main ").on('change', '.frontendselect',function() {
+        let text=this.value;
+        if (text.length>0){
+            $(this).closest(".block").find("textarea").val(text);
+        }
+    });
+
+    //chat
+    $("#main ").on("click",".startchat",function(e){
+        e.preventDefault();
+        let system=$(".chatsystem").val();
+        let engine=$(".chatengine").val();
+        changeStatus("CHAT");
+        eel.startChat(system,engine);
+    });
+
+
+    //transcriber
     
     $("#main ").on("click",".startprojector",function(e){
         e.preventDefault();
@@ -89,19 +123,34 @@ async function load_template() {
         }
     }
 
-async function send_template(data){
-    var r =eel.process_template( JSON.stringify(data))();
-    if (r){
-        //alert("rebut!")
-    } else {
-        alert("error template process")
-    }
+
+
+function send_template(data){
+    eel.endchat();
+    setTimeout(function(){
+    eel.initProjector()
+    setTimeout(function(){
+        //async function send_template(data){
+        //var r =eel.process_template( JSON.stringify(data))();
+        eel.launch_template( JSON.stringify(data))
+        /*
+        if (r){
+            //add project button
+            //alert("rebut!")
+        } else {
+            alert("error template process")
+        }
+        */
+    }, 1000);
+}, 1000);
+
 }
 
 function build_view(o){
+    console.log(o);
     let H='';
     H+='<form class="textinputs">';
-    o.blocks.forEach(function(b) {
+    o.blocks.block.forEach(function(b) {
       
             console.log(b);
             H+='<div class="block">';
@@ -111,6 +160,14 @@ function build_view(o){
             if (b.type=="input"){
                 H+='<label>'+b.label+'</label>'
                 H+='<input id="'+b.id+'" name="'+b.id+'" >';
+            }
+            if (b.type=="textarea"){
+                H+='<label>'+b.label+'</label>';
+                let text="";
+                if (b.hasOwnProperty("value")) {
+                    text=b.value;
+                }
+                H+='<textarea id="'+b.id+'" name="'+b.id+'" >'+text+'</textarea>';
             }
             if (b.type=="transcription"){
                
@@ -125,12 +182,37 @@ function build_view(o){
                 
                 H+='</div>';
             }
+
+            if (b.type=="chat"){
+                H+='<h4>'+b.label+'</h4>'
+                H+='<label>System</label>';
+                H+='<textarea class="chatsystem">'+b.system+'</textarea>';
+                H+='<input type="hidden" class="chatengine" value="'+b.engine+'" >';
+                H+='<div class="actions">';
+                H+='<button class="btn startchat">Start</button>';
+                H+='</div>';
+            }
+            if(b.option){
+                H+='<select class="frontendselect">';
+                H+='<option value="">Select a template</option>';
+                id="";
+                b.option.forEach(function(o) {
+                   H+='<option value="'+o.value+'">'+o.title+'</option>';
+                   id=o.id;
+                });
+                H+='</select>';
+                H+='<br><br>';
+                H+='<textarea id="'+id+'" name="'+id+'" ></textarea>';
+            }
+
+
             H+='</div>';
      
     });
-    
+    if (o.hasOwnProperty("process")) {
     H+='<div class="process">';
-    if ("options"in o.process[0]){
+    if (o.process.hasOwnProperty("options")) {
+    //if ("options" in o.process[0]){
         H+='<div class="bigoptions">';
         H+='<select name="options">';
         H+='<option>Choose a template::::</option>';
@@ -140,6 +222,7 @@ function build_view(o){
             counter++;
         });
         H+='</select>';
+        //H+='<input type="checkbox" checked id="project" name="project"> <label for="project">Send to projector?</label>';
         H+='<input type="submit" class="btn submit" value="Make predictions" >';
         H+='</div>';
     } else {
@@ -147,19 +230,28 @@ function build_view(o){
         H+='<label># Results</label>'
         H+='<input id="res" name="res" type="number" max="10" step="1" value="1" >';
         H+='</div>'
+        H+='<div class="rightprocess">';
+        H+='<div class="option"><input checked type="checkbox" id="project" name="project"> <label for="project">Send to projector?</label></div>';
         H+='<input type="submit" class="btn submit" value="Make predictions" >';
+        H+='</div>';
         H+='</div>';
     
        
     }
+
     H+='</div>';
+}
     H+='</form>';
     H+='<div class="responses" style="display:none">';
     // H+='<h2>Options</h2>'
      H+='<form class="predoptions">';
      H+='<div class="list">';
      H+='</div>';
-    H+='<input type="submit" class="submit btn" value="Continue">';
+     H+='<div class="submitactions">';
+    H+='<input type="submit" class="submit btn" value="Next template">';
+
+    H+='<button class="sendtoprojector btn" >Send to projector</button>';
+    H+='</div>';
     H+='</form>';
     H+='</div>';
     console.log(H);
@@ -221,7 +313,18 @@ function getRes(res,type="radio") {
 }
 
 
+function sendtoprojector(){
+
+}
+
 //helpers
 function scrolltoBottom(){
     $('body,html').animate({ scrollTop: $('#main').height() }, 800);
+}
+
+function changeStatus(status){
+    $("#status").text(status);
+}
+function getStatus(){
+    return $("#status").text();
 }

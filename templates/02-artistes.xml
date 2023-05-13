@@ -1,0 +1,43 @@
+ <root>
+ <blocks>
+    <block>
+      <type>p</type>
+      <text>Artistes</text>
+    </block>
+    <block>
+      <type>input</type>
+      <label>Passat</label>
+      <id>passat</id>
+    </block>
+    <block>
+      <type>input</type>
+      <label>Futur</label>
+      <id>futur</id>
+    </block>
+  </blocks>
+  
+  <process>
+    <step>
+      <text>How would a title of a contemporary art museum would be called based on these predictions made by a fortune teller</text>
+    </step>
+    <step>
+      <text>Future: </text>
+    </step>
+    <step>
+      <input>passat</input>
+      <translate>ca_en</translate>
+      <after>\n</after>
+    </step>
+    <step>
+      <text>Past: </text>
+    </step>
+    <step>
+      <input>futur</input>
+      <translate>ca_en</translate>
+      <after>\n</after>
+    </step>
+    <step>
+      <text>The title of the exhibition:</text>
+    </step>
+  </process>
+  </root>

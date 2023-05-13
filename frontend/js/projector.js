@@ -10,6 +10,7 @@ function initVars(){
   window.voice="";
   window.speed = 50;
   document.getElementById("text").innerHTML ="";
+  window.streamedText="";
 }
 
 initVars();
@@ -47,15 +48,13 @@ function handleEndBlock(trigger){
 
 function typeWriter() {
   window.is_typing=true;
+  
   let screenH=$(window).height();
   if (window.i < window.txt.length) {
     $("#text .shine").removeClass("shine");
-    //document.getElementById("text").innerHTML=$("#text").text();
       let c=window.txt.charAt(window.i);
-      //if (c=="."){
-      //  c=".<br>"; 
-      //}
       document.getElementById("text").innerHTML += '<span class="shine">'+c+'</span>';
+      
       let newtextH=$("#text").height()+100;
       if (newtextH>=screenH){
         //next page
@@ -65,21 +64,87 @@ function typeWriter() {
       window.i++;
       window.last_text_H=newtextH;
       setTimeout(typeWriter, window.speed);
+     // $("#texttype").stop();
+     // $("#texttype").animate({ scrollTop:$("#texttype #text").height()}, 600);
+     //$("#texttype").scrollTop($("#texttype #text").height());
   } else {
     console.log("no more text in window.txt");
+    $("#text .shine").removeClass("shine");
     //end
     window.is_typing=false;
     handleEndBlock("typing");
   }
 }
 
+function animateStreamedText(){
+  window.is_typing=true;
+  if (window.i < window.streamedText.length) {
+    $("#text .shine").removeClass("shine");
+    if (window.streamedText.substring(0, 2) === "\n") {
+      //if ((c==='\\') && (window.streamedText.charAt(window.i+1)=== 'n')){
+        document.getElementById("text").innerHTML +='<br>';
+      }
+    let c= window.streamedText.charAt(window.i);
+    
+    window.streamedText=window.streamedText.substring(1);
+    document.getElementById("text").innerHTML += '<span class="shine">'+c+'</span>';
+    setTimeout(animateStreamedText, window.speed);
+  } else {
+    //end writing text
+    window.is_typing=false;
+  }
+ 
+}
+
+function typewriterTheaterChunk(chunk){
+  //gets chunks from chat2 in story writing mode
+  if (chunk=="<STOP>"){
+    //end of stream
+    $("#text .shine").removeClass("shine");
+  } else {
+    
+    window.streamedText+=chunk;
+    animateStreamedText();
+    $("#texttype").stop();
+     $("#texttype").animate({ scrollTop:$("#texttype #text").height()}, 600);
+
+  }
+}
+
+function typeWriterChat(chunk) {
+  //gets chunks from chat2 in chat mode
+ 
+  $("#chat .shine").removeClass("shine");
+  $("#conversation .text")[0].innerHTML += '<span class="shine">'+chunk+'</span>';
+}
+
+
+eel.expose(recieveChatStream);
+function recieveChatStream(chunk){
+  if (chunk=="<STOP>"){
+    //end of stream 
+    $("#chat .shine").removeClass("shine");
+  
+  } else {
+    //new chunk
+    typeWriterChat(chunk);
+  }
+  $("#conversation").stop();
+  $("#conversation").animate({ scrollTop:$("#conversation .text").height()}, 600);
+}
+
+eel.expose(getPredictionChunk);
+function getPredictionChunk(chunk) {
+  typewriterTheaterChunk(chunk);
+}
+
 eel.expose(preStartProjector);
 function preStartProjector(timest){
   window.blocksid=timest;
   document.getElementById("text").innerHTML ="";
-    $("#main").show();
-    window.playing=true;
-    startTheater();
+  $("#main").show();
+  window.playing=true;
+  startTheater();
 }
 
 eel.expose(endProjection);
@@ -90,7 +155,8 @@ function endProjection(){
   speechSynthesis.cancel();
   initVars();
   let speed=1000;
-  $("#three,#main").fadeOut(speed);
+  $("#three").fadeOut(speed);
+ 
   /*
   setTimeout(function(){
     document.getElementById("text").innerHTML="";
@@ -122,18 +188,6 @@ function addtext(data,i,id){
     } 
   }
 }
-
-/*
-eel.expose(showtext);
-function showtext(data){
-    speak(data["en"],data["voice"]);
-    window.i = 0;
-    window.txt = data["cat"];
-    
-    document.getElementById("text").innerHTML="";
-    typeWriter();
-}
-*/
 
 if ('speechSynthesis' in window) {
     // Speech Synthesis supported 🎉
@@ -235,75 +289,115 @@ function speak(text,voicename) {
 speak("Interface ready","Google US English");
 
 function startTheater(){
-/* Create a Tree.js script with planes rotating in space with the same image */
 
-let imgSrc='cercle.jpg';//'cringe.jpg';
+  //$("#main").fadeIn(1000);
+  $("#chat").removeClass("enabled");
 
-// Create a scene
-let scene = new THREE.Scene();
+  console.log("startTheater");
+  /* Create a Tree.js script with planes rotating in space with the same image */
 
+  let imgSrc='cercle.jpg';//'cringe.jpg';
 
-// Create a camera
-let camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-
-// Create a renderer
-let renderer = new THREE.WebGLRenderer({ antialias: true , alpha: true });
-renderer.setPixelRatio( window.devicePixelRatio );
-renderer.setSize(window.innerWidth, window.innerHeight);
-$("#three")[0].appendChild(renderer.domElement);
+  // Create a scene
+  let scene = new THREE.Scene();
 
 
-// Set up the objects
-let planeGeometry = new THREE.PlaneGeometry(1,1);
-//let planeMaterial = new THREE.MeshBasicMaterial({map:texture} );
-let basicmaterial= new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+  // Create a camera
+  let camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
 
-camera.position.z = 5;
-
-// Create a plane geometry
-let geometry = new THREE.PlaneGeometry(10, 10);
-
-// Create a material
-let material = new THREE.MeshBasicMaterial();
-
-// Create a plane
-let plane = new THREE.Mesh(geometry, material);
-
-// Load an image
-let loader = new THREE.TextureLoader();
-loader.load(imgSrc, (texture) => {
-    loader.needsUpdate = true;
-    // Set texture to material
-    material.map = texture;
-
-    let scaler=1.2;
-    // Update plane
-    let aspectRatio = texture.image.width / texture.image.height;
-    plane.scale.x = aspectRatio*scaler;
-    plane.scale.y = 1*scaler;
-    console.log("loaded");
-    // Add plane to the scene
-    scene.add(plane);
-});
+  // Create a renderer
+  let renderer = new THREE.WebGLRenderer({ antialias: true , alpha: true });
+  renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  $("#three")[0].appendChild(renderer.domElement);
 
 
+  // Set up the objects
+  let planeGeometry = new THREE.PlaneGeometry(1,1);
+  //let planeMaterial = new THREE.MeshBasicMaterial({map:texture} );
+  let basicmaterial= new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 
-// Rotate the planes, render loop
-function animate() {
+  camera.position.z = 5;
+
+  // Create a plane geometry
+  let geometry = new THREE.PlaneGeometry(10, 10);
+
+  // Create a material
+  let material = new THREE.MeshBasicMaterial();
+
+  // Create a plane
+  let plane = new THREE.Mesh(geometry, material);
+
+  // Load an image
+  let loader = new THREE.TextureLoader();
+  loader.load(imgSrc, (texture) => {
+      loader.needsUpdate = true;
+      // Set texture to material
+      material.map = texture;
+
+      let scaler=1.2;
+      // Update plane
+      let aspectRatio = texture.image.width / texture.image.height;
+      plane.scale.x = aspectRatio*scaler;
+      plane.scale.y = 1*scaler;
+      console.log("loaded");
+      // Add plane to the scene
+      scene.add(plane);
+  });
+
+
+
+  // Rotate the planes, render loop
+  function animate() {
     requestAnimationFrame( animate );
-  plane.rotation.z += 0.001;
-  //plane2.rotation.z -= 0.01;
-  //plane3.rotation.z += 0.01;
-  //mesh.rotation.x += 0.005;
-  renderer.render(scene, camera);
-  //requestAnimationFrame(animate);
+    plane.rotation.z += 0.001;
+    //plane2.rotation.z -= 0.01;
+    //plane3.rotation.z += 0.01;
+    //mesh.rotation.x += 0.005;
+    renderer.render(scene, camera);
+    //requestAnimationFrame(animate);
+  }
+  setTimeout(function(){
+    console.log("three fadein");
+    $("#three").fadeIn(1000);
+  }, 1000);
+
+  console.log("animate");
+  animate();
+
 }
-setTimeout(function(){
-  $("#three").fadeIn(1000);
-}, 1000);
 
-animate();
+///CHAT functions
 
+eel.expose(startchat);
+function startchat(){
+  endProjection();
+  $("#conversation .text").text("");
+  $("#main").show();
+  $("#chat").addClass("enabled");
+  $("#prompt").removeClass("disabled");
+ 
 }
 
+eel.expose(endchat);
+function endchat(){
+  $("#prompt").addClass("disabled");
+  setTimeout(function(){ $("#chat").removeClass("enabled"); }, 5000);
+}
+ 
 
+
+
+$("#prompt").on("keydown", function (event) {
+  if (event.key === "Enter") {
+    const text = $(this).val();
+    if (text) {
+      //window.chathistory.push({"role":"user","content":text});
+      //eel.sendprompt(window.chathistory,window.chatsystem,window.chatengine);
+      eel.sendprompt(text);
+      
+      $("#conversation .text").text("")
+      $(this).val("");
+    }
+  }
+});
