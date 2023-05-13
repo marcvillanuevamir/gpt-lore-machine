@@ -5,7 +5,7 @@ import json
 import pygame
 from pygame import mixer
 import time
-from lib.translator import *
+#from lib.translator import *
 import threading
 from datetime import datetime
 from lib.gpt import GPT
