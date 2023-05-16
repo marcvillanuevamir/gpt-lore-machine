@@ -19,7 +19,7 @@ You should start like this:
 Also explain that while the user talks with Pasquale, explain that you will be thinking of ways to improve Santa Mònica based on what the user wanted to improve about Santa Mònica. 
 Briefly rephrase what user proposed for Santa Mònica improvement, but in a shorter way and making it look like the proposal is being processed as a request. But make it sarcastic like a more witty, offensive maybe, wrongfull misunderstanding of that need, and agree with user on it so the user feels like "Oh no! I didn't said that!", after that say "See you in a bit!". add the command "END".
 
-Talk in catalan
+Talk in catalan unless the user talks another language.
 
       </system>
     </block>
@@ -69,7 +69,6 @@ These line of events bring to some key changes in the context with tragic events
 
 The context is:
 - Barcelona's Santa Mònica art center. 
-- It's director Enric Puig, a catalan philosopher interested in digital media and focusing on the processes of art creation rather than the finished piece of art, involving as many local agents as possible.
 - Current exhibition is called Utopia Rambles.
 - There's local elecctions comming in 2 weeks.
 - Tonight it's a special event called Night of the museums, where all museums and art centers in the city are opened during the night.
@@ -96,8 +95,7 @@ write it in catalan
     <label>LORE</label>
     <value>
 Based on this context:
-- Barcelona's Santa Mònica art center. 
-- It's director Enric Puig, a catalan philosopher interested in digital media and focusing on the processes of art creation rather than the finished piece of art, involving as many local agents as possible.
+- Barcelona's Santa Mònica contemporary art center. 
 - Current exhibition is called Utopia Rambles.
 
 Write a list of variations of the current exhibition title and maybe a subtitle based on these proposed strategy changes, make them all terrible ideas:
@@ -113,8 +111,63 @@ write it in catalan and only the list with no further comments.
     </option>
 
 
-  
+   <option>
+    <title>Contrassenyes wifi</title>
+    <type>textarea</type>
+    <label>LORE</label>
+    <value>
 
+
+Write a list of invented but possible WIFI passwords for the contemporary art center Santa Mònica in Barcelona make sure you use alphanumeric combinations, introduce each password explaining why you came out with the idea.
+It could be related to literary authors, mathematic formulas or random and dubitative combinations.
+Write a list over 20.
+
+Introduce what are these passwords as if I didn't asked you to do this.
+
+write it in spanish.
+    
+    </value>
+    <id>lore</id>
+    </option>
+
+
+<option>
+    <title>Tindr profiles</title>
+    <type>textarea</type>
+    <label>LORE</label>
+    <value>
+
+
+Write a list of the 10 Tindr ideal profiles for ___, she loves Barcelona's SantaMònica contemporary art museum and chill vibes. Make it witty.
+
+write it in spanish.
+    
+    </value>
+    <id>lore</id>
+    </option>
+
+
+<option>
+    <title>Tindr profiles</title>
+    <type>textarea</type>
+    <label>LORE</label>
+    <value>
+
+Write a story about this person that arrives to Barcelona's SantaMònica art center with some worries and suddenly enters a portal that after crossing it everything will turn the oposite of her life, in a good way.
+
+Name: Maria
+
+Zodiac sign: Gemini
+
+Job: Advertisement agency
+
+
+Write it in Spanish
+
+
+    </value>
+    <id>lore</id>
+    </option>
 
 
     </block>
